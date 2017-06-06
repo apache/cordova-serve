@@ -20,7 +20,6 @@
 var child_process = require('child_process'),
     exec = require('./exec'),
     fs = require('fs'),
-    path = require('path'),
     Q = require('q');
 
 var NOT_INSTALLED = 'The browser target is not installed: %target%';
