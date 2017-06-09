@@ -17,9 +17,9 @@
  under the License.
  */
 
-var chalk   = require('chalk'),
-    express = require('express'),
-    Q       = require('q');
+var chalk = require('chalk');
+var express = require('express');
+var Q = require('q');
 
 /**
  * @desc Launches a server with the specified options and optional custom handlers.

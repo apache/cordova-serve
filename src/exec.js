@@ -17,8 +17,8 @@
  under the License.
  */
 
-var child_process = require('child_process'),
-    Q             = require('q');
+var child_process = require('child_process');
+var Q = require('q');
 
 /**
  * Executes the command specified.
@@ -32,8 +32,7 @@ module.exports = function (cmd, opt_cwd) {
         child_process.exec(cmd, {cwd: opt_cwd, maxBuffer: 1024000}, function (err, stdout, stderr) {
             if (err) {
                 d.reject(new Error('Error executing "' + cmd + '": ' + stderr));
-            }
-            else {
+            } else {
                 d.resolve(stdout);
             }
         });
@@ -43,4 +42,3 @@ module.exports = function (cmd, opt_cwd) {
     }
     return d.promise;
 };
-

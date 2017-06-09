@@ -17,10 +17,10 @@
  under the License.
  */
 
-var child_process = require('child_process'),
-    exec = require('./exec'),
-    fs = require('fs'),
-    Q = require('q');
+var child_process = require('child_process');
+var exec = require('./exec');
+var fs = require('fs');
+var Q = require('q');
 
 var NOT_INSTALLED = 'The browser target is not installed: %target%';
 var NOT_SUPPORTED = 'The browser target is not supported: %target%';
@@ -44,34 +44,34 @@ module.exports = function (opts) {
 
         var urlAdded = false;
         switch (process.platform) {
-            case 'darwin':
-                args = ['open'];
-                if (target == 'chrome') {
-                    // Chrome needs to be launched in a new window. Other browsers, particularly, opera does not work with this.        
-                    args.push('-n');
-                }
-                args.push('-a', browser);
-                break;
-            case 'win32':
-                // On Windows, we really want to use the "start" command. But, the rules regarding arguments with spaces, and 
-                // escaping them with quotes, can get really arcane. So the easiest way to deal with this is to pass off the 
-                // responsibility to "cmd /c", which has that logic built in. 
-                // 
-                // Furthermore, if "cmd /c" double-quoted the first parameter, then "start" will interpret it as a window title, 
-                // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
+        case 'darwin':
+            args = ['open'];
+            if (target === 'chrome') {
+                // Chrome needs to be launched in a new window. Other browsers, particularly, opera does not work with this.
+                args.push('-n');
+            }
+            args.push('-a', browser);
+            break;
+        case 'win32':
+            // On Windows, we really want to use the "start" command. But, the rules regarding arguments with spaces, and
+            // escaping them with quotes, can get really arcane. So the easiest way to deal with this is to pass off the
+            // responsibility to "cmd /c", which has that logic built in.
+            //
+            // Furthermore, if "cmd /c" double-quoted the first parameter, then "start" will interpret it as a window title,
+            // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
 
-                if (target === 'edge') {
-                    browser += ':' + url;
-                    urlAdded = true;
-                }
+            if (target === 'edge') {
+                browser += ':' + url;
+                urlAdded = true;
+            }
 
-                args = ['cmd /c start ""', browser];
-                break;
-            case 'linux':
+            args = ['cmd /c start ""', browser];
+            break;
+        case 'linux':
                 // if a browser is specified, launch it with the url as argument
                 // otherwise, use xdg-open.
-                args = [browser];
-                break;
+            args = [browser];
+            break;
         }
 
         if (!urlAdded) {
@@ -80,12 +80,14 @@ module.exports = function (opts) {
         var command = args.join(' ');
         return exec(command).catch(function (error) {
             // Assume any error means that the browser is not installed and display that as a more friendly error.
-            throw new Error(NOT_INSTALLED.replace('%target%', target));
+            if (error) {
+                throw new Error(NOT_INSTALLED.replace('%target%', target));
+            }
         });
     });
 };
 
-function getBrowser(target, dataDir) {
+function getBrowser (target, dataDir) {
     dataDir = dataDir || 'temp_chrome_user_data_dir_for_cordova';
 
     var chromeArgs = ' --user-data-dir=/tmp/' + dataDir;
@@ -125,14 +127,14 @@ function getBrowser(target, dataDir) {
     return Q.reject(NOT_SUPPORTED.replace('%target%', target));
 }
 
-function checkBrowserExistsWindows(browser, target) {
+function checkBrowserExistsWindows (browser, target) {
     var promise = target === 'edge' ? edgeSupported() : browserInstalled(browser);
     return promise.catch(function (error) {
-        return Q.reject((error && error.toString() || NOT_INSTALLED).replace('%target%', target));
+        return Q.reject(((error && error.toString()) || ((NOT_INSTALLED).replace('%target%', target))));
     });
 }
 
-function edgeSupported() {
+function edgeSupported () {
     var d = Q.defer();
 
     child_process.exec('ver', function (err, stdout, stderr) {
@@ -151,7 +153,7 @@ function edgeSupported() {
 }
 
 var regItemPattern = /\s*\(Default\)\s+(REG_SZ)\s+([^\s].*)\s*/;
-function browserInstalled(browser) {
+function browserInstalled (browser) {
     // On Windows, the 'start' command searches the path then 'App Paths' in the registry. We do the same here. Note
     // that the start command uses the PATHEXT environment variable for the list of extensions to use if no extension is
     // provided. We simplify that to just '.EXE' since that is what all the supported browsers use.
@@ -175,7 +177,7 @@ function browserInstalled(browser) {
                 // fail the fs.exists() test below to give us the expected result).
                 d.reject();
             } else {
-                fs.exists(trimRegPath(result[2]), function (exists) {
+                fs.stat(trimRegPath(result[2]), function (exists) {
                     if (exists) {
                         d.resolve();
                     } else {
@@ -190,7 +192,7 @@ function browserInstalled(browser) {
     return d.promise;
 }
 
-function trimRegPath(path) {
+function trimRegPath (path) {
     // Trim quotes and whitespace
     return path.replace(/^[\s"]+|[\s"]+$/g, '');
 }

@@ -17,9 +17,9 @@
  under the License.
  */
 
-var fs     = require('fs'),
-    Q      = require('q'),
-    util   = require('./util');
+var fs = require('fs');
+var Q = require('q');
+var util = require('./util');
 
 /**
  * Launches a server where the root points to the specified platform in a Cordova project.
@@ -49,7 +49,7 @@ module.exports = function (platform, opts) {
     });
 };
 
-function findProjectRoot(path) {
+function findProjectRoot (path) {
     var projectRoot = util.cordovaProjectRoot(path);
     if (!projectRoot) {
         if (!path) {
