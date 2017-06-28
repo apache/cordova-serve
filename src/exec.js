@@ -29,7 +29,14 @@ var child_process = require('child_process'),
 module.exports = function (cmd, opt_cwd) {
     var d = Q.defer();
     try {
+        // In Linux, the callback is not called until the process terminates.
+        // If the error is not caused within 2 seconds, then the promise will be resolved.
+        var timer = process.platform === 'linux' ?
+            setTimeout(function () {
+                d.resolve('TimeOut');
+            }, 2000) : undefined;
         child_process.exec(cmd, {cwd: opt_cwd, maxBuffer: 1024000}, function (err, stdout, stderr) {
+            clearTimeout(timer);
             if (err) {
                 d.reject(new Error('Error executing "' + cmd + '": ' + stderr));
             }
