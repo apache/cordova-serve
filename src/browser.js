@@ -17,9 +17,10 @@
  under the License.
  */
 
+/* globals Promise: true */
+
 var child_process = require('child_process'),
     fs = require('fs'),
-    Q = require('q'),
     open = require('open'),
     exec = require('./exec');
 
@@ -33,7 +34,7 @@ var NOT_SUPPORTED = 'The browser target is not supported: %target%';
  *   target - the target browser - ie, chrome, safari, opera, firefox or chromium
  *   url - the url to open in the browser
  *   dataDir - a data dir to provide to Chrome (can be used to force it to open in a new window)
- * @return {Q} Promise to launch the specified browser
+ * @return {Promise} Promise to launch the specified browser
  */
 module.exports = function (opts) {
 
@@ -42,57 +43,55 @@ module.exports = function (opts) {
 
     target = target.toLowerCase();
     if(target === 'default') {
-        return open(url);
+        open(url);
+        return Promise.resolve();
     }
     else {
-
         return getBrowser(target, opts.dataDir).then(function (browser) {
             var args;
-
             var urlAdded = false;
 
+            switch (process.platform) {
+                case 'darwin':
+                    args = ['open'];
+                    if (target == 'chrome') {
+                        // Chrome needs to be launched in a new window. Other browsers, particularly, opera does not work with this.
+                        args.push('-n');
+                    }
+                    args.push('-a', browser);
+                    break;
+                case 'win32':
+                    // On Windows, we really want to use the "start" command. But, the rules regarding arguments with spaces, and
+                    // escaping them with quotes, can get really arcane. So the easiest way to deal with this is to pass off the
+                    // responsibility to "cmd /c", which has that logic built in.
+                    //
+                    // Furthermore, if "cmd /c" double-quoted the first parameter, then "start" will interpret it as a window title,
+                    // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
 
-                switch (process.platform) {
-                    case 'darwin':
-                        args = ['open'];
-                        if (target == 'chrome') {
-                            // Chrome needs to be launched in a new window. Other browsers, particularly, opera does not work with this.
-                            args.push('-n');
-                        }
-                        args.push('-a', browser);
-                        break;
-                    case 'win32':
-                        // On Windows, we really want to use the "start" command. But, the rules regarding arguments with spaces, and
-                        // escaping them with quotes, can get really arcane. So the easiest way to deal with this is to pass off the
-                        // responsibility to "cmd /c", which has that logic built in.
-                        //
-                        // Furthermore, if "cmd /c" double-quoted the first parameter, then "start" will interpret it as a window title,
-                        // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
+                    if (target === 'edge') {
+                        browser += ':' + url;
+                        urlAdded = true;
+                    }
 
-                        if (target === 'edge') {
-                            browser += ':' + url;
-                            urlAdded = true;
-                        }
+                    args = ['cmd /c start ""', browser];
+                    break;
+                case 'linux':
+                    // if a browser is specified, launch it with the url as argument
+                    // otherwise, use xdg-open.
+                    args = [browser];
+                    break;
+            }
 
-                        args = ['cmd /c start ""', browser];
-                        break;
-                    case 'linux':
-                        // if a browser is specified, launch it with the url as argument
-                        // otherwise, use xdg-open.
-                        args = [browser];
-                        break;
-                }
+            if (!urlAdded) {
+                args.push(url);
+            }
+            var command = args.join(' ');
 
-                if (!urlAdded) {
-                    args.push(url);
-                }
-                var command = args.join(' ');
-
-                return exec(command).catch(function (error) {
-                    // Assume any error means that the browser is not installed and display that as a more friendly error.
-                    throw new Error(NOT_INSTALLED.replace('%target%', target));
-                });
+            return exec(command).catch(function (error) {
+                // Assume any error means that the browser is not installed and display that as a more friendly error.
+                throw new Error(NOT_INSTALLED.replace('%target%', target));
             });
+        });
     }
 };
 
@@ -122,83 +121,110 @@ function getBrowser(target, dataDir) {
             'opera': 'opera'
         }
     };
+
     if (target in browsers[process.platform]) {
         var browser = browsers[process.platform][target];
-        if (process.platform === 'win32') {
-            // Windows displays a dialog if the browser is not installed. We'd prefer to avoid that.
-            return checkBrowserExistsWindows(browser, target).then(function () {
-                return browser;
-            });
-        } else {
-            return Q(browser);
-        }
+        return checkBrowserExistsWindows(browser, target).then(function () {
+            return Promise.resolve(browser);
+        });
     }
-    return Q.reject(NOT_SUPPORTED.replace('%target%', target));
+    else {
+        return Promise.reject(NOT_SUPPORTED.replace('%target%', target));
+    }
+
 }
 
 function checkBrowserExistsWindows(browser, target) {
-    var promise = target === 'edge' ? edgeSupported() : browserInstalled(browser);
-    return promise.catch(function (error) {
-        return Q.reject((error && error.toString() || NOT_INSTALLED).replace('%target%', target));
+    var promise = new Promise(function (resolve, reject){
+        // Windows displays a dialog if the browser is not installed. We'd prefer to avoid that.
+        if (process.platform === 'win32') {
+            if(target === 'edge') {
+                edgeSupported().then(function () {
+                    resolve();
+                })
+                .catch(function(err){
+                    reject((err && err.toString() || NOT_INSTALLED).replace('%target%', target));
+                });
+            }
+            else {
+                browserInstalled(browser).then(function() {
+                    resolve();
+                })
+                .catch(function(err) {
+                    reject((err && err.toString() || NOT_INSTALLED).replace('%target%', target));
+                });
+            }
+        }
+        else {
+            resolve();
+        }
+
     });
+    return promise;
 }
 
 function edgeSupported() {
-    var d = Q.defer();
-
-    child_process.exec('ver', function (err, stdout, stderr) {
-        if (err || stderr) {
-            d.reject(err || stderr);
-        } else {
-            var windowsVersion = stdout.match(/([0-9.])+/g)[0];
-            if (parseInt(windowsVersion) < 10) {
-                d.reject('The browser target is not supported on this version of Windows: %target%');
+    var prom = new Promise(function(resolve,reject){
+        child_process.exec('ver', function (err, stdout, stderr) {
+            if (err || stderr) {
+                reject(err || stderr);
             } else {
-                d.resolve();
+                var windowsVersion = stdout.match(/([0-9.])+/g)[0];
+                if (parseInt(windowsVersion) < 10) {
+                    reject('The browser target is not supported on this version of Windows: %target%');
+                } else {
+                    resolve();
+                }
             }
-        }
+        });
     });
-    return d.promise;
+    return prom;
 }
 
 var regItemPattern = /\s*\(Default\)\s+(REG_SZ)\s+([^\s].*)\s*/;
 function browserInstalled(browser) {
-    // On Windows, the 'start' command searches the path then 'App Paths' in the registry. We do the same here. Note
-    // that the start command uses the PATHEXT environment variable for the list of extensions to use if no extension is
-    // provided. We simplify that to just '.EXE' since that is what all the supported browsers use.
+    // On Windows, the 'start' command searches the path then 'App Paths' in the registry.
+    // We do the same here. Note that the start command uses the PATHEXT environment variable
+    // for the list of extensions to use if no extension is provided. We simplify that to just '.EXE'
+    // since that is what all the supported browsers use. Check path (simple but usually won't get a hit)
 
-    // Check path (simple but usually won't get a hit)
-    if (require('shelljs').which(browser)) {
-        return Q.resolve();
-    }
+    var promise = new Promise(function(resolve,reject) {
+        if (require('shelljs').which(browser)) {
+            return resolve();
+        }
+        else {
+            var regQPre  = 'reg QUERY "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\';
+            var regQPost = '.EXE" /v ""';
+            var regQuery = regQPre + browser.split(' ')[0] + regQPost;
 
-    var d = Q.defer();
-
-    child_process.exec('reg QUERY "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\' + browser.split(' ')[0] + '.EXE" /v ""', function (err, stdout, stderr) {
-        if (err || stderr) {
-            // The registry key does not exist, which just means the app is not installed.
-            d.reject();
-        } else {
-            var result = regItemPattern.exec(stdout);
-            if (!result) {
-                // The registry key exists, but has no default value, which means the app is not installed (note that we
-                // don't expect to hit this, since we'll just get a default value of '(value not set)', but that will
-                // fail the fs.exists() test below to give us the expected result).
-                d.reject();
-            } else {
-                fs.exists(trimRegPath(result[2]), function (exists) {
-                    if (exists) {
-                        d.resolve();
-                    } else {
-                        // The default value is not a file that exists, which means the app is not installed.
-                        d.reject();
+            child_process.exec(regQuery , function (err, stdout, stderr) {
+                if (err) {
+                    // The registry key does not exist, which just means the app is not installed.
+                    reject();
+                }
+                else {
+                    var result = regItemPattern.exec(stdout);
+                    if (!result) {
+                        // The registry key exists, but has no default value, which means the app is not
+                        // installed (note that we don't expect to hit this, since we'll just get a default
+                        //  value of '(value not set)', but that will fail the fs.existsSync() test below
+                        // to give us the expected result).
+                        reject();
                     }
-                });
-            }
+                    else {
+                        if(fs.existsSync(trimRegPath(result[2]))) {
+                            resolve();
+                        }
+                        else {
+                            // The default value is not a file that exists, which means the app is not installed.
+                            reject();
+                        }
+                    }
+                }
+            });
         }
     });
-
-    return d.promise;
+    return promise;
 }
 
 function trimRegPath(path) {
