@@ -19,8 +19,7 @@
 
 var chalk = require('chalk'),
     compression = require('compression'),
-    express = require('express'),
-    server = require('./src/server');
+    express = require('express');
 
 module.exports = function () {
     return new CordovaServe();
@@ -38,7 +37,7 @@ function CordovaServe() {
             if (encoding) {
                 msg += chalk.gray(' (' + encoding + ')');
             }
-            server.log(msg);
+            require('./server').log(msg);
         });
         next();
     });
@@ -46,11 +45,12 @@ function CordovaServe() {
     // Turn on compression
     this.app.use(compression());
 
-    this.servePlatform = require('./src/platform');
-    this.launchServer = server;
+    this.servePlatform = require('./platform');
+    this.launchServer = require('./server');
+    this.launchBrowser = require('./browser');
 }
 
-module.exports.launchBrowser = require('./src/browser');
+// module.exports.launchBrowser = require('./browser');
 
 // Expose some useful express statics
 module.exports.Router = express.Router;

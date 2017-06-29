@@ -18,9 +18,10 @@
  */
 
 var child_process = require('child_process'),
-    exec = require('./exec'),
     fs = require('fs'),
-    Q = require('q');
+    Q = require('q'),
+    open = require('open'),
+    exec = require('./exec');
 
 var NOT_INSTALLED = 'The browser target is not installed: %target%';
 var NOT_SUPPORTED = 'The browser target is not supported: %target%';
@@ -35,54 +36,64 @@ var NOT_SUPPORTED = 'The browser target is not supported: %target%';
  * @return {Q} Promise to launch the specified browser
  */
 module.exports = function (opts) {
+
     var target = opts.target || 'chrome';
     var url = opts.url || '';
 
     target = target.toLowerCase();
-    return getBrowser(target, opts.dataDir).then(function (browser) {
-        var args;
+    if(target === 'default') {
+        return open(url);
+    }
+    else {
 
-        var urlAdded = false;
-        switch (process.platform) {
-            case 'darwin':
-                args = ['open'];
-                if (target == 'chrome') {
-                    // Chrome needs to be launched in a new window. Other browsers, particularly, opera does not work with this.        
-                    args.push('-n');
+        return getBrowser(target, opts.dataDir).then(function (browser) {
+            var args;
+
+            var urlAdded = false;
+
+
+                switch (process.platform) {
+                    case 'darwin':
+                        args = ['open'];
+                        if (target == 'chrome') {
+                            // Chrome needs to be launched in a new window. Other browsers, particularly, opera does not work with this.
+                            args.push('-n');
+                        }
+                        args.push('-a', browser);
+                        break;
+                    case 'win32':
+                        // On Windows, we really want to use the "start" command. But, the rules regarding arguments with spaces, and
+                        // escaping them with quotes, can get really arcane. So the easiest way to deal with this is to pass off the
+                        // responsibility to "cmd /c", which has that logic built in.
+                        //
+                        // Furthermore, if "cmd /c" double-quoted the first parameter, then "start" will interpret it as a window title,
+                        // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
+
+                        if (target === 'edge') {
+                            browser += ':' + url;
+                            urlAdded = true;
+                        }
+
+                        args = ['cmd /c start ""', browser];
+                        break;
+                    case 'linux':
+                        // if a browser is specified, launch it with the url as argument
+                        // otherwise, use xdg-open.
+                        args = [browser];
+                        break;
                 }
-                args.push('-a', browser);
-                break;
-            case 'win32':
-                // On Windows, we really want to use the "start" command. But, the rules regarding arguments with spaces, and 
-                // escaping them with quotes, can get really arcane. So the easiest way to deal with this is to pass off the 
-                // responsibility to "cmd /c", which has that logic built in. 
-                // 
-                // Furthermore, if "cmd /c" double-quoted the first parameter, then "start" will interpret it as a window title, 
-                // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
 
-                if (target === 'edge') {
-                    browser += ':' + url;
-                    urlAdded = true;
+                if (!urlAdded) {
+                    args.push(url);
                 }
+                var command = args.join(' ');
 
-                args = ['cmd /c start ""', browser];
-                break;
-            case 'linux':
-                // if a browser is specified, launch it with the url as argument
-                // otherwise, use xdg-open.
-                args = [browser];
-                break;
-        }
-
-        if (!urlAdded) {
-            args.push(url);
-        }
-        var command = args.join(' ');
-        return exec(command).catch(function (error) {
-            // Assume any error means that the browser is not installed and display that as a more friendly error.
-            throw new Error(NOT_INSTALLED.replace('%target%', target));
-        });
-    });
+                return exec(command).catch(function (error) {
+                    // Assume any error means that the browser is not installed and display that as a more friendly error.
+                    throw new Error(NOT_INSTALLED.replace('%target%', target));
+                });
+            });
+    }
 };
 
 function getBrowser(target, dataDir) {
