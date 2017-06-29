@@ -3,6 +3,11 @@
   "version": "1.0.2-dev",
   "description": "Apache Cordova server support for cordova-lib and cordova-browser.",
   "main": "src/main.js",
+  "scripts": {
+    "jasmine": "jasmine JASMINE_CONFIG_PATH=spec/jasmine.json",
+    "jshint": "node node_modules/jshint/bin/jshint src",
+    "test": "npm run jshint && npm run jasmine"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/apache/cordova-lib"
@@ -27,11 +32,8 @@
     "shelljs": "^0.5.3"
   },
   "devDependencies": {
+    "jasmine": "^2.5.2",
     "jshint": "^2.8.0"
-  },
-  "scripts": {
-    "jshint": "node node_modules/jshint/bin/jshint src",
-    "test": "npm run jshint"
   },
   "engines": {
     "node": ">=4.0.0",
