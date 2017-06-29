@@ -17,6 +17,8 @@
  under the License.
  */
 
+/* globals Promise: true */
+
 var child_process = require('child_process');
 
 /**
