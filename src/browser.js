@@ -38,6 +38,7 @@ var NOT_SUPPORTED = 'The browser target is not supported: %target%';
  */
 module.exports = function (opts) {
 
+    opts = opts || {};
     var target = opts.target || 'chrome';
     var url = opts.url || '';
 
