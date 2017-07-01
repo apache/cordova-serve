@@ -28,12 +28,6 @@ function expectPromise(obj){
 
 describe('browser', function() {
 
-    beforeEach(function(){
-        spyOn(child_process,'exec').and.callFake(function(cmd,options,callback){
-            callback && callback(null,"success",null);
-        });
-    });
-
     it('exists and has expected properties', function() {
         expect(browser).toBeDefined();
         expect(typeof browser).toBe('function');
@@ -44,6 +38,9 @@ describe('browser', function() {
         expect(result).toBeDefined();
         expectPromise(result);
         result.then(function(res) {
+            done();
+        });
+        result.catch(function(err){
             done();
         });
     });
