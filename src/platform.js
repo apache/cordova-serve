@@ -18,7 +18,6 @@
  */
 
 var fs     = require('fs'),
-    Q      = require('q'),
     util   = require('./util');
 
 /**
@@ -30,23 +29,30 @@ var fs     = require('fs'),
  * @returns {*|promise}
  */
 module.exports = function (platform, opts) {
+
+    // note: `this` is actually an instance of main.js CordovaServe
+    // this module is a mixin
     var that = this;
-    return Q().then(function () {
+    var retPromise = new Promise(function(resolve,reject){
         if (!platform) {
-            throw new Error('A platform must be specified');
+            reject('Error: A platform must be specified');
+        }
+        else {
+            opts = opts || {};
+            var projectRoot = findProjectRoot(opts.root);
+            that.projectRoot = projectRoot;
+            opts.root = util.getPlatformWwwRoot(projectRoot, platform);
+
+            if (!fs.existsSync(opts.root)) {
+                reject('Error: Project does not include the specified platform: ' + platform);
+            }
+            else {
+                return that.launchServer(opts);
+            }
         }
 
-        opts = opts || {};
-        var projectRoot = findProjectRoot(opts.root);
-        that.projectRoot = projectRoot;
-
-        opts.root = util.getPlatformWwwRoot(projectRoot, platform);
-        if (!fs.existsSync(opts.root)) {
-            throw new Error('Project does not include the specified platform: ' + platform);
-        }
-
-        return that.launchServer(opts);
     });
+    return retPromise;
 };
 
 function findProjectRoot(path) {
