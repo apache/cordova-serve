@@ -36,11 +36,11 @@ describe('server', function() {
         expect(result).toBeDefined();
         expectPromise(result);
         result.then(function(res) {
-            console.log("success : " + res);
+            // console.log("success : " + res);
             done();
         });
         result.catch(function(err){
-            console.log("error : " + err);
+            // console.log("error : " + err);
             done();
         });
     });

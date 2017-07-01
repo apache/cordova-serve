@@ -17,6 +17,8 @@
  under the License.
  */
 
+/* globals Promise: true */
+
 var fs     = require('fs'),
     util   = require('./util');
 

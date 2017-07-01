@@ -17,6 +17,8 @@
  under the License.
  */
 
+/* globals Promise: true */
+
 var chalk   = require('chalk'),
     express = require('express');
 
@@ -60,12 +62,11 @@ module.exports = function (opts) {
         // If we have a project root, make that available as a static root also. This can be useful in cases where source
         // files that have been transpiled (such as TypeScript) are located under the project root on a path that mirrors
         // the the transpiled file's path under the platform root and is pointed to by a map file.
-        console.log("pr " + that.projectRoot)
         if (that.projectRoot) {
             app.use(express.static(that.projectRoot));
         }
 
-        var listener = server.listen(port)
+        var listener = server.listen(port);
         listener.on('listening', function () {
             that.port = port;
             var message = 'Static file server running on: ' + chalk.green('http://localhost:' + port) + ' (CTRL + C to shut down)';
