@@ -5,8 +5,8 @@
   "main": "src/main.js",
   "scripts": {
     "jasmine": "jasmine JASMINE_CONFIG_PATH=spec/jasmine.json",
-    "jshint": "node node_modules/jshint/bin/jshint src",
-    "test": "npm run jshint && npm run jasmine"
+    "eslint": "node node_modules/eslint/bin/eslint ./src",
+    "test": "npm run eslint && npm run jasmine"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,13 @@
   },
   "devDependencies": {
     "jasmine": "^2.5.2",
-    "jshint": "^2.8.0",
+    "eslint": "^4.0.0",
+    "eslint-config-semistandard": "^11.0.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "rewire": "^2.5.2"
   },
   "engines": {
