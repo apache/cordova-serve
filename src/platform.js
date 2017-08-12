@@ -19,8 +19,8 @@
 
 /* globals Promise: true */
 
-var fs     = require('fs'),
-    util   = require('./util');
+var fs = require('fs');
+var util = require('./util');
 
 /**
  * Launches a server where the root points to the specified platform in a Cordova project.
@@ -35,20 +35,18 @@ module.exports = function (platform, opts) {
     // note: `this` is actually an instance of main.js CordovaServe
     // this module is a mixin
     var that = this;
-    var retPromise = new Promise(function(resolve,reject){
+    var retPromise = new Promise(function (resolve, reject) {
         if (!platform) {
-            reject('Error: A platform must be specified');
-        }
-        else {
+            reject(new Error('Error: A platform must be specified'));
+        } else {
             opts = opts || {};
             var projectRoot = findProjectRoot(opts.root);
             that.projectRoot = projectRoot;
             opts.root = util.getPlatformWwwRoot(projectRoot, platform);
 
             if (!fs.existsSync(opts.root)) {
-                reject('Error: Project does not include the specified platform: ' + platform);
-            }
-            else {
+                reject(new Error('Error: Project does not include the specified platform: ' + platform));
+            } else {
                 return that.launchServer(opts);
             }
         }
@@ -57,7 +55,7 @@ module.exports = function (platform, opts) {
     return retPromise;
 };
 
-function findProjectRoot(path) {
+function findProjectRoot (path) {
     var projectRoot = util.cordovaProjectRoot(path);
     if (!projectRoot) {
         if (!path) {

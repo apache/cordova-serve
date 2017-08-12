@@ -19,8 +19,8 @@
 
 /* globals Promise: true */
 
-var chalk   = require('chalk'),
-    express = require('express');
+var chalk = require('chalk');
+var express = require('express');
 
 /**
  * @desc Launches a server with the specified options and optional custom handlers.
@@ -29,8 +29,8 @@ var chalk   = require('chalk'),
  */
 module.exports = function (opts) {
 
-   var that = this;
-   var promise = new Promise(function(resolve,reject){
+    var that = this;
+    var promise = new Promise(function (resolve, reject) {
 
         opts = opts || {};
         var port = opts.port || 8000;
@@ -39,8 +39,7 @@ module.exports = function (opts) {
             if (!opts.noLogOutput) {
                 if (opts.events) {
                     opts.events.emit('log', msg);
-                }
-                else {
+                } else {
                     console.log(msg);
                 }
             }
@@ -79,8 +78,7 @@ module.exports = function (opts) {
             if (e && e.toString().indexOf('EADDRINUSE') > -1) {
                 port++;
                 server.listen(port);
-            }
-            else {
+            } else {
                 reject(e);
             }
         });
