@@ -47,7 +47,7 @@ module.exports = function (platform, opts) {
             if (!fs.existsSync(opts.root)) {
                 reject(new Error('Error: Project does not include the specified platform: ' + platform));
             } else {
-                return that.launchServer(opts);
+                return resolve(that.launchServer(opts));
             }
         }
 
