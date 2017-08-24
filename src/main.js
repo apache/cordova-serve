@@ -50,7 +50,7 @@ function CordovaServe () {
     this.launchBrowser = require('./browser');
 }
 
-// module.exports.launchBrowser = require('./browser');
+module.exports.launchBrowser = require('./browser');
 
 // Expose some useful express statics
 module.exports.Router = express.Router;
