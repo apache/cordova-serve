@@ -1,6 +1,6 @@
 {
   "name": "cordova-serve",
-  "version": "2.0.0",
+  "version": "2.0.1-dev",
   "description": "Apache Cordova server support for cordova-lib and cordova-browser.",
   "main": "src/main.js",
   "scripts": {
