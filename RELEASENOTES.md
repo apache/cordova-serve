@@ -20,6 +20,18 @@
 -->
 # Cordova-serve Release Notes
 
+### 2.0.0 (Aug 24, 2017)
+* [CB-13188](https://issues.apache.org/jira/browse/CB-13188) set serve to use default system browser if none is provided.
+* Change to `eslint` instead of `jshint`
+* remove `q` dependence completely. Added `server.spec`
+* added browser tests
+* Convert `src/browser` to use Promise api
+* Add License, Contributing, Notice, pr-template, ...
+* [CB-12785](https://issues.apache.org/jira/browse/CB-12785) added travis and appveyor
+* [CB-12762](https://issues.apache.org/jira/browse/CB-12762): updated common, fetch, and serve pkgJson to point pkgJson repo items to github mirrors
+* [CB-12665](https://issues.apache.org/jira/browse/CB-12665) removed enginestrict since it is deprecated
+* [CB-11977](https://issues.apache.org/jira/browse/CB-11977): updated engines and enginescript for common, fetch, and serve
+
 ### 1.0.1 (Jan 17, 2017)
 * [CB-12284](https://issues.apache.org/jira/browse/CB-12284) Include project root as additional root for static router
 * Some corrections and enhancements for cordova-serve readme.
