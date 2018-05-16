@@ -25,15 +25,15 @@ var path = require('path');
 // into the actual platform.
 
 var platforms = {
-    amazon_fireos: {www_dir: 'assets/www'},
-    android: {www_dir: 'assets/www'},
-    blackberry10: {www_dir: 'www'},
-    browser: {www_dir: 'www'},
-    firefoxos: {www_dir: 'www'},
-    ios: {www_dir: 'www'},
-    ubuntu: {www_dir: 'www'},
-    windows: {www_dir: 'www'},
-    wp8: {www_dir: 'www'}
+    amazon_fireos: { www_dir: function (version) { return 'assets/www'; } },
+    android: { www_dir: function (version) { return parseFloat(version) < 7 ? 'assets/www' : 'app/src/main/assets/www'; } },
+    blackberry10: { www_dir: function (version) { return 'www'; } },
+    browser: { www_dir: function (version) { return 'www'; } },
+    firefoxos: { www_dir: function (version) { return 'www'; } },
+    ios: { www_dir: function (version) { return 'www'; } },
+    ubuntu: { www_dir: function (version) { return 'www'; } },
+    windows: { www_dir: function (version) { return 'www'; } },
+    wp8: { www_dir: function (version) { return 'www'; } }
 };
 
 /**
@@ -76,7 +76,13 @@ function getPlatformWwwRoot (cordovaProjectRoot, platformName) {
     if (!platform) {
         throw new Error('Unrecognized platform: ' + platformName);
     }
-    return path.join(cordovaProjectRoot, 'platforms', platformName, platform.www_dir);
+
+    var version = require(path.join(cordovaProjectRoot, 'platforms', platformName, 'cordova/version')).version;
+    if (!version) {
+        throw new Error('Version not found for platform: ' + platformName);
+    }
+
+    return path.join(cordovaProjectRoot, 'platforms', platformName, platform.www_dir(version));
 }
 
 function isRootDir (dir) {
