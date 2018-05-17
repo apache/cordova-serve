@@ -26,7 +26,7 @@ var path = require('path');
 
 var platforms = {
     amazon_fireos: {www_dir: 'assets/www'},
-    android: {www_dir: 'assets/www'},
+    android: {www_dir: 'app/src/main/assets/www'},
     blackberry10: {www_dir: 'www'},
     browser: {www_dir: 'www'},
     firefoxos: {www_dir: 'www'},
