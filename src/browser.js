@@ -198,7 +198,7 @@ function edgeSupported () {
     return prom;
 }
 
-var regItemPattern = /\s*\(.*\)\s+(REG_SZ)\s+([^\s].*)\s*/;
+var regItemPattern = /\s*\([^)]+\)\s+(REG_SZ)\s+([^\s].*)\s*/;
 function browserInstalled (browser) {
     // On Windows, the 'start' command searches the path then 'App Paths' in the registry.
     // We do the same here. Note that the start command uses the PATHEXT environment variable
@@ -236,3 +236,5 @@ function trimRegPath (path) {
     // Trim quotes and whitespace
     return path.replace(/^[\s"]+|[\s"]+$/g, '');
 }
+
+module.exports.regItemPattern = regItemPattern;
