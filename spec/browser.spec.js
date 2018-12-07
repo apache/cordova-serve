@@ -72,7 +72,7 @@ describe('browser', function() {
         done();
     });
 
-    it('should recognize browser from registry with key "Default" on non-English Windows 10', function(done) {
+    it('should recognize browser from registry with key "Standard" on non-English Windows 10', function(done) {
         result = browser.regItemPattern.exec("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Standard)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe");
         expect(result[2]).toBe("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
         done();
