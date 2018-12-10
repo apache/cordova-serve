@@ -78,4 +78,10 @@ describe('browser', function() {
         done();
     });
 
+    it('should recognize browser with non-Latin registry key on Russian Windows 10', function(done) {
+        var result = browser.regItemPattern.exec("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (�� 㬮�砭��)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe");
+        expect(result[2]).toBe("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
+        done();
+    });
+
 });
