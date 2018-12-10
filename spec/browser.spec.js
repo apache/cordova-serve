@@ -58,11 +58,13 @@ describe('browser', function() {
         expect(result).toBeDefined();
         expectPromise(result);
         result.then(function(res) {
+            expect(mockOpen).toHaveBeenCalledWith(mockUrl);
+            browser.__set__('open', origOpen);
             done();
+        })
+        .catch(function(err) {
+            browser.__set__('open', origOpen);
+            done(err);
         });
-
-        expect(mockOpen).toHaveBeenCalledWith(mockUrl);
-        browser.__set__('open', origOpen);
-
     });
 });
