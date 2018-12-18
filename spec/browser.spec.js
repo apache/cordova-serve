@@ -34,19 +34,26 @@ describe('browser', function() {
     });
 
     it('should return a promise', function(done) {
+        var mockOpen = jasmine.createSpy('mockOpen');
+        var origOpen = browser.__get__('open'); // so we can be nice and restore it later
+
+        browser.__set__('open',mockOpen);
+
         var result = browser();
         expect(result).toBeDefined();
         expectPromise(result);
+        
         result.then(function(res) {
+            browser.__set__('open', origOpen);
             done();
-        });
-        result.catch(function(err){
-            done();
+        })
+        .catch(function(err) {
+            browser.__set__('open', origOpen);
+            done(err);
         });
     });
 
     it('should call open() when target is `default`', function(done) {
-
         var mockOpen = jasmine.createSpy('mockOpen');
         var origOpen = browser.__get__('open'); // so we can be nice and restore it later
 
@@ -57,12 +64,15 @@ describe('browser', function() {
         var result = browser({target:'default',url:mockUrl});
         expect(result).toBeDefined();
         expectPromise(result);
+        
         result.then(function(res) {
+            expect(mockOpen).toHaveBeenCalledWith(mockUrl);
+            browser.__set__('open', origOpen);
             done();
+        })
+        .catch(function(err) {
+            browser.__set__('open', origOpen);
+            done(err);
         });
-
-        expect(mockOpen).toHaveBeenCalledWith(mockUrl);
-        browser.__set__('open', origOpen);
-
     });
 });
