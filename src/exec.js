@@ -30,7 +30,7 @@ var child_process = require('child_process');
 module.exports = function (cmd, opt_cwd) {
     return new Promise(function (resolve, reject) {
         try {
-            var opt = {cwd: opt_cwd, maxBuffer: 1024000};
+            var opt = { cwd: opt_cwd, maxBuffer: 1024000 };
             var timerID = 0;
             if (process.platform === 'linux') {
                 timerID = setTimeout(function () {

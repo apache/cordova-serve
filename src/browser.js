@@ -22,6 +22,7 @@
 var child_process = require('child_process');
 var fs = require('fs');
 var open = require('opn');
+var which = require('which');
 var exec = require('./exec');
 
 var NOT_INSTALLED = 'The browser target is not installed: %target%';
@@ -206,7 +207,7 @@ function browserInstalled (browser) {
     // since that is what all the supported browsers use. Check path (simple but usually won't get a hit)
 
     var promise = new Promise(function (resolve, reject) {
-        if (require('shelljs').which(browser)) {
+        if (which.sync(browser, { nothrow: true })) {
             return resolve();
         } else {
             var regQPre = 'reg QUERY "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\';
