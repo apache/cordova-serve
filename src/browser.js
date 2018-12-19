@@ -236,5 +236,3 @@ function trimRegPath (path) {
     // Trim quotes and whitespace
     return path.replace(/^[\s"]+|[\s"]+$/g, '');
 }
-
-module.exports.regItemPattern = regItemPattern;
