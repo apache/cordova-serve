@@ -20,6 +20,13 @@
 -->
 # Cordova-serve Release Notes
 
+### 3.0.0 (Dec 20, 2018)
+* [CB-14198](https://issues.apache.org/jira/browse/CB-14198) (all) Fix bug when running simulate --target= under non-US **Windows** 10 (#14)
+* Don't restore mocked resource prior to resolution (#15)
+* Dependency updates & replacing shelljs with which
+* [CB-14069](https://issues.apache.org/jira/browse/CB-14069) Drop Node 4, Add Node 10 Support
+* [CB-14191](https://issues.apache.org/jira/browse/CB-14191) (android) Fix bug with module requiring (#10)
+
 ### 2.0.1 (Jun 06, 2018)
 * Use `opn` module instead of deprecated `open`
 * [CB-14054](https://issues.apache.org/jira/browse/CB-14054) (android) fixing `cordova-android` directory restructuring.
