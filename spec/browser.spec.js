@@ -19,6 +19,7 @@ var rewire = require('rewire');
 
 var browser = rewire("../src/browser");
 var regItemPattern = browser.__get__("regItemPattern");
+var getBrowser = browser.__get__("getBrowser");
 
 function expectPromise(obj){
     // 3 slightly different ways of verifying a promise
@@ -93,5 +94,22 @@ describe('browser', function() {
         var result = regItemPattern.exec("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (�� 㬮�砭��)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe");
         expect(result[2]).toBe("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
         done();
+    });
+
+    it('should append user arguments to getBrowser results', function(done) {
+        var someCoolArgument = 'SOME COOL ARGUMENT';
+        var result = getBrowser(/*target*/'chrome', /*dataDir*/null, /*userArgs*/someCoolArgument);
+        expect(result).toBeDefined();
+        expectPromise(result);
+        
+        result.then(function(res) {
+            var endsWithSomeCoolArgument = res.endsWith(someCoolArgument);
+            expect( endsWithSomeCoolArgument ).toBe(true);
+            if( !endsWithSomeCoolArgument ) {
+                done(res);
+            } else {
+                done();
+            }
+        });
     });
 });

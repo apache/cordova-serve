@@ -48,7 +48,7 @@ module.exports = function (opts) {
         open(url);
         return Promise.resolve();
     } else {
-        return getBrowser(target, opts.dataDir).then(function (browser) {
+        return getBrowser(target, opts.dataDir, opts.userArgs).then(function (browser) {
             var args;
             var urlAdded = false;
 
@@ -102,8 +102,12 @@ module.exports = function (opts) {
     }
 };
 
-function getBrowser (target, dataDir) {
+function getBrowser (target, dataDir, userArgs) {
     dataDir = dataDir || 'temp_chrome_user_data_dir_for_cordova';
+    userArgs = userArgs || '';
+    if (userArgs.length > 0) {
+        userArgs = ' ' + userArgs;
+    }
 
     var chromeArgs = ' --user-data-dir=/tmp/' + dataDir;
     var browsers = {
@@ -132,7 +136,7 @@ function getBrowser (target, dataDir) {
     if (target in browsers[process.platform]) {
         var browser = browsers[process.platform][target];
         return checkBrowserExistsWindows(browser, target).then(function () {
-            return Promise.resolve(browser);
+            return Promise.resolve(browser + userArgs);
         });
     } else {
         return Promise.reject(NOT_SUPPORTED.replace('%target%', target));
