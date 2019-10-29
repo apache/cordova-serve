@@ -78,21 +78,24 @@ describe('browser', function () {
     });
 
     describe('regItemPattern', () => {
+        const regPath = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE';
+        const appPath = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
+        function expectPatternToExtractPathFrom (input) {
+            expect(regItemPattern.exec(input)[2]).toBe(appPath);
+        }
+
         it('should recognize browser from registry with key "Default" on English Windows 10', function (done) {
-            var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Default)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-            expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            expectPatternToExtractPathFrom(`${regPath} (Default)    REG_SZ    ${appPath}`);
             done();
         });
 
         it('should recognize browser from registry with key "Standard" on non-English Windows 10', function (done) {
-            var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Standard)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-            expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            expectPatternToExtractPathFrom(`${regPath} (Standard)    REG_SZ    ${appPath}`);
             done();
         });
 
         it('should recognize browser with non-Latin registry key on Russian Windows 10', function (done) {
-            var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (�� 㬮�砭��)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-            expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            expectPatternToExtractPathFrom(`${regPath} (�� 㬮�砭��)    REG_SZ    ${appPath}`);
             done();
         });
     });
