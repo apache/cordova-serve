@@ -77,21 +77,23 @@ describe('browser', function () {
             });
     });
 
-    it('should recognize browser from registry with key "Default" on English Windows 10', function (done) {
-        var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Default)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        done();
-    });
+    describe('regItemPattern', () => {
+        it('should recognize browser from registry with key "Default" on English Windows 10', function (done) {
+            var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Default)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            done();
+        });
 
-    it('should recognize browser from registry with key "Standard" on non-English Windows 10', function (done) {
-        var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Standard)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        done();
-    });
+        it('should recognize browser from registry with key "Standard" on non-English Windows 10', function (done) {
+            var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Standard)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            done();
+        });
 
-    it('should recognize browser with non-Latin registry key on Russian Windows 10', function (done) {
-        var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (�� 㬮�砭��)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        done();
+        it('should recognize browser with non-Latin registry key on Russian Windows 10', function (done) {
+            var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (�� 㬮�砭��)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
+            done();
+        });
     });
 });
