@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "jasmine": "jasmine JASMINE_CONFIG_PATH=spec/jasmine.json",
-    "eslint": "node node_modules/eslint/bin/eslint ./src",
+    "eslint": "eslint .",
     "test": "npm run eslint && npm run jasmine"
   },
   "repository": {
