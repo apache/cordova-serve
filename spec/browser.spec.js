@@ -14,7 +14,7 @@
     specific language governing permissions and limitations
     under the License.
 */
-var child_process = require('child_process');
+
 var rewire = require('rewire');
 
 var browser = rewire('../src/browser');

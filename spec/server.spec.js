@@ -35,13 +35,6 @@ describe('server', function () {
         var result = server({ port: 8008, noServerInfo: 1 });
         expect(result).toBeDefined();
         expectPromise(result);
-        result.then(function (res) {
-            // console.log("success : " + res);
-            done();
-        });
-        result.catch(function (err) {
-            // console.log("error : " + err);
-            done();
-        });
+        result.then(done, done);
     });
 });
