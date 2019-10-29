@@ -77,19 +77,16 @@ describe('browser', function () {
             expect(regItemPattern.exec(input)[2]).toBe(appPath);
         }
 
-        it('should recognize browser from registry with key "Default" on English Windows 10', function (done) {
+        it('should recognize browser from registry with key "Default" on English Windows 10', function () {
             expectPatternToExtractPathFrom(`${regPath} (Default)    REG_SZ    ${appPath}`);
-            done();
         });
 
-        it('should recognize browser from registry with key "Standard" on non-English Windows 10', function (done) {
+        it('should recognize browser from registry with key "Standard" on non-English Windows 10', function () {
             expectPatternToExtractPathFrom(`${regPath} (Standard)    REG_SZ    ${appPath}`);
-            done();
         });
 
-        it('should recognize browser with non-Latin registry key on Russian Windows 10', function (done) {
+        it('should recognize browser with non-Latin registry key on Russian Windows 10', function () {
             expectPatternToExtractPathFrom(`${regPath} (�� 㬮�砭��)    REG_SZ    ${appPath}`);
-            done();
         });
     });
 });
