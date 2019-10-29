@@ -36,33 +36,24 @@ describe('browser', function () {
         expect(typeof browser).toBe('function');
     });
 
-    it('should return a promise', function (done) {
+    it('should return a promise', function () {
         var result = browser();
         expect(result).toBeDefined();
         expectPromise(result);
 
-        result.then(function (res) {
-            done();
-        })
-            .catch(function (err) {
-                done(err);
-            });
+        return result;
     });
 
-    it('should call open() when target is `default`', function (done) {
+    it('should call open() when target is `default`', function () {
         var mockUrl = 'this is the freakin url';
 
         var result = browser({ target: 'default', url: mockUrl });
         expect(result).toBeDefined();
         expectPromise(result);
 
-        result.then(function (res) {
+        return result.then(() => {
             expect(browser.__get__('open')).toHaveBeenCalledWith(mockUrl);
-            done();
-        })
-            .catch(function (err) {
-                done(err);
-            });
+        });
     });
 
     describe('regItemPattern', () => {
