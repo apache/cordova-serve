@@ -17,9 +17,6 @@
 
 var rewire = require('rewire');
 
-var browser = rewire('../src/browser');
-var regItemPattern = browser.__get__('regItemPattern');
-
 function expectPromise (obj) {
     // 3 slightly different ways of verifying a promise
     expect(typeof obj.then).toBe('function');
@@ -28,6 +25,11 @@ function expectPromise (obj) {
 }
 
 describe('browser', function () {
+    let browser;
+    beforeEach(() => {
+        browser = rewire('../src/browser');
+        browser.__set__('open', jasmine.createSpy('mockOpen'));
+    });
 
     it('exists and has expected properties', function () {
         expect(browser).toBeDefined();
@@ -35,31 +37,19 @@ describe('browser', function () {
     });
 
     it('should return a promise', function (done) {
-        var mockOpen = jasmine.createSpy('mockOpen');
-        var origOpen = browser.__get__('open'); // so we can be nice and restore it later
-
-        browser.__set__('open', mockOpen);
-
         var result = browser();
         expect(result).toBeDefined();
         expectPromise(result);
 
         result.then(function (res) {
-            browser.__set__('open', origOpen);
             done();
         })
             .catch(function (err) {
-                browser.__set__('open', origOpen);
                 done(err);
             });
     });
 
     it('should call open() when target is `default`', function (done) {
-        var mockOpen = jasmine.createSpy('mockOpen');
-        var origOpen = browser.__get__('open'); // so we can be nice and restore it later
-
-        browser.__set__('open', mockOpen);
-
         var mockUrl = 'this is the freakin url';
 
         var result = browser({ target: 'default', url: mockUrl });
@@ -67,17 +57,20 @@ describe('browser', function () {
         expectPromise(result);
 
         result.then(function (res) {
-            expect(mockOpen).toHaveBeenCalledWith(mockUrl);
-            browser.__set__('open', origOpen);
+            expect(browser.__get__('open')).toHaveBeenCalledWith(mockUrl);
             done();
         })
             .catch(function (err) {
-                browser.__set__('open', origOpen);
                 done(err);
             });
     });
 
     describe('regItemPattern', () => {
+        let regItemPattern;
+        beforeEach(() => {
+            regItemPattern = browser.__get__('regItemPattern');
+        });
+
         const regPath = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE';
         const appPath = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
         function expectPatternToExtractPathFrom (input) {
