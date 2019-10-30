@@ -17,9 +17,6 @@
 
 var rewire = require('rewire');
 
-var browser = rewire('../src/browser');
-var regItemPattern = browser.__get__('regItemPattern');
-
 function expectPromise (obj) {
     // 3 slightly different ways of verifying a promise
     expect(typeof obj.then).toBe('function');
@@ -28,70 +25,59 @@ function expectPromise (obj) {
 }
 
 describe('browser', function () {
+    let browser;
+    beforeEach(() => {
+        browser = rewire('../src/browser');
+        browser.__set__('open', jasmine.createSpy('mockOpen'));
+    });
 
     it('exists and has expected properties', function () {
         expect(browser).toBeDefined();
         expect(typeof browser).toBe('function');
     });
 
-    it('should return a promise', function (done) {
-        var mockOpen = jasmine.createSpy('mockOpen');
-        var origOpen = browser.__get__('open'); // so we can be nice and restore it later
-
-        browser.__set__('open', mockOpen);
-
+    it('should return a promise', function () {
         var result = browser();
         expect(result).toBeDefined();
         expectPromise(result);
 
-        result.then(function (res) {
-            browser.__set__('open', origOpen);
-            done();
-        })
-            .catch(function (err) {
-                browser.__set__('open', origOpen);
-                done(err);
-            });
+        return result;
     });
 
-    it('should call open() when target is `default`', function (done) {
-        var mockOpen = jasmine.createSpy('mockOpen');
-        var origOpen = browser.__get__('open'); // so we can be nice and restore it later
-
-        browser.__set__('open', mockOpen);
-
+    it('should call open() when target is `default`', function () {
         var mockUrl = 'this is the freakin url';
 
         var result = browser({ target: 'default', url: mockUrl });
         expect(result).toBeDefined();
         expectPromise(result);
 
-        result.then(function (res) {
-            expect(mockOpen).toHaveBeenCalledWith(mockUrl);
-            browser.__set__('open', origOpen);
-            done();
-        })
-            .catch(function (err) {
-                browser.__set__('open', origOpen);
-                done(err);
-            });
+        return result.then(() => {
+            expect(browser.__get__('open')).toHaveBeenCalledWith(mockUrl);
+        });
     });
 
-    it('should recognize browser from registry with key "Default" on English Windows 10', function (done) {
-        var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Default)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        done();
-    });
+    describe('regItemPattern', () => {
+        let regItemPattern;
+        beforeEach(() => {
+            regItemPattern = browser.__get__('regItemPattern');
+        });
 
-    it('should recognize browser from registry with key "Standard" on non-English Windows 10', function (done) {
-        var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (Standard)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        done();
-    });
+        const regPath = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE';
+        const appPath = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
+        function expectPatternToExtractPathFrom (input) {
+            expect(regItemPattern.exec(input)[2]).toBe(appPath);
+        }
 
-    it('should recognize browser with non-Latin registry key on Russian Windows 10', function (done) {
-        var result = regItemPattern.exec('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\chrome.EXE (�� 㬮�砭��)    REG_SZ    C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        expect(result[2]).toBe('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe');
-        done();
+        it('should recognize browser from registry with key "Default" on English Windows 10', function () {
+            expectPatternToExtractPathFrom(`${regPath} (Default)    REG_SZ    ${appPath}`);
+        });
+
+        it('should recognize browser from registry with key "Standard" on non-English Windows 10', function () {
+            expectPatternToExtractPathFrom(`${regPath} (Standard)    REG_SZ    ${appPath}`);
+        });
+
+        it('should recognize browser with non-Latin registry key on Russian Windows 10', function () {
+            expectPatternToExtractPathFrom(`${regPath} (�� 㬮�砭��)    REG_SZ    ${appPath}`);
+        });
     });
 });

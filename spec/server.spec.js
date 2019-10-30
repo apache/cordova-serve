@@ -31,10 +31,10 @@ describe('server', function () {
         expect(typeof server).toBe('function');
     });
 
-    it('should return a promise', function (done) {
+    it('should return a promise', function () {
         var result = server({ port: 8008, noServerInfo: 1 });
         expect(result).toBeDefined();
         expectPromise(result);
-        result.then(done, done);
+        return result;
     });
 });
