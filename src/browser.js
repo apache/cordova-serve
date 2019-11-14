@@ -38,7 +38,6 @@ var NOT_SUPPORTED = 'The browser target is not supported: %target%';
  * @return {Promise} Promise to launch the specified browser
  */
 module.exports = function (opts) {
-
     opts = opts || {};
     var target = opts.target || 'default';
     var url = opts.url || '';
@@ -107,25 +106,25 @@ function getBrowser (target, dataDir) {
 
     var chromeArgs = ' --user-data-dir=/tmp/' + dataDir;
     var browsers = {
-        'win32': {
-            'ie': 'iexplore',
-            'chrome': 'chrome --user-data-dir=%TEMP%\\' + dataDir,
-            'safari': 'safari',
-            'opera': 'opera',
-            'firefox': 'firefox',
-            'edge': 'microsoft-edge'
+        win32: {
+            ie: 'iexplore',
+            chrome: 'chrome --user-data-dir=%TEMP%\\' + dataDir,
+            safari: 'safari',
+            opera: 'opera',
+            firefox: 'firefox',
+            edge: 'microsoft-edge'
         },
-        'darwin': {
-            'chrome': '"Google Chrome" --args' + chromeArgs,
-            'safari': 'safari',
-            'firefox': 'firefox',
-            'opera': 'opera'
+        darwin: {
+            chrome: '"Google Chrome" --args' + chromeArgs,
+            safari: 'safari',
+            firefox: 'firefox',
+            opera: 'opera'
         },
-        'linux': {
-            'chrome': 'google-chrome' + chromeArgs,
-            'chromium': 'chromium-browser' + chromeArgs,
-            'firefox': 'firefox',
-            'opera': 'opera'
+        linux: {
+            chrome: 'google-chrome' + chromeArgs,
+            chromium: 'chromium-browser' + chromeArgs,
+            firefox: 'firefox',
+            opera: 'opera'
         }
     };
 
@@ -137,7 +136,6 @@ function getBrowser (target, dataDir) {
     } else {
         return Promise.reject(NOT_SUPPORTED.replace('%target%', target));
     }
-
 }
 
 // err might be null, in which case defaultMsg is used.
@@ -176,7 +174,6 @@ function checkBrowserExistsWindows (browser, target) {
         } else {
             resolve();
         }
-
     });
     return promise;
 }

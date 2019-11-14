@@ -18,7 +18,6 @@
 var main = require('..');
 
 describe('main', function () {
-
     it('exists and has expected properties', function () {
         expect(main).toBeDefined();
         expect(main.Router).toBeDefined();
