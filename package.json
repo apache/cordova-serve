@@ -5,8 +5,8 @@
   "main": "src/main.js",
   "scripts": {
     "jasmine": "jasmine JASMINE_CONFIG_PATH=spec/jasmine.json",
-    "eslint": "eslint .",
-    "test": "npm run eslint && npm run jasmine"
+    "lint": "eslint .",
+    "test": "npm run lint && npm run jasmine"
   },
   "repository": {
     "type": "git",
@@ -31,14 +31,8 @@
     "which": "^1.3.0"
   },
   "devDependencies": {
+    "@cordova/eslint-config": "^2.0.0",
     "jasmine": "^3.3.0",
-    "eslint": "^5.0.0",
-    "eslint-config-semistandard": "^13.0.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.0",
-    "eslint-plugin-standard": "^4.0.0",
     "rewire": "^4.0.1"
   },
   "engines": {

@@ -28,10 +28,8 @@ var express = require('express');
  * @returns {*|promise}
  */
 module.exports = function (opts) {
-
     var that = this;
     var promise = new Promise(function (resolve, reject) {
-
         opts = opts || {};
         var port = opts.port || 8000;
 

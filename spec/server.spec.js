@@ -25,7 +25,6 @@ function expectPromise (obj) {
 }
 
 describe('server', function () {
-
     it('exists and has expected properties', function () {
         expect(server).toBeDefined();
         expect(typeof server).toBe('function');

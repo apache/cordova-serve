@@ -31,7 +31,6 @@ var util = require('./util');
  * @returns {*|promise}
  */
 module.exports = function (platform, opts) {
-
     // note: `this` is actually an instance of main.js CordovaServe
     // this module is a mixin
     var that = this;
@@ -50,7 +49,6 @@ module.exports = function (platform, opts) {
                 return resolve(that.launchServer(opts));
             }
         }
-
     });
     return retPromise;
 };
