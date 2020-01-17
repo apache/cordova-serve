@@ -43,6 +43,7 @@ module.exports = function (platform, opts) {
             if (opts.middleware) {
                 const middlewarePath = path.join(process.cwd(), opts.middleware);
                 if (fs.existsSync(middlewarePath)) {
+                    that.app.use(require('body-parser').json());
                     that.app.use(require(middlewarePath));
                 } else {
                     throw new Error('Error: middleware can not be found');
