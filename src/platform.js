@@ -21,6 +21,7 @@
 
 var fs = require('fs');
 var util = require('./util');
+var path = require('path');
 
 /**
  * Launches a server where the root points to the specified platform in a Cordova project.
@@ -39,6 +40,14 @@ module.exports = function (platform, opts) {
             reject(new Error('Error: A platform must be specified'));
         } else {
             opts = opts || {};
+            if (opts.middleware) {
+                const middlewarePath = path.join(process.cwd(), opts.middleware);
+                if (fs.existsSync(middlewarePath)) {
+                    that.app.use(require(middlewarePath));
+                } else {
+                    throw new Error('Error: middleware can not be found');
+                }
+            }
             var projectRoot = findProjectRoot(opts.root);
             that.projectRoot = projectRoot;
             opts.root = util.getPlatformWwwRoot(projectRoot, platform);

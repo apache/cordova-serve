@@ -125,3 +125,4 @@ The opts object passed to `launchServer()` and `servePlatform()` supports the fo
 * **noServerInfo**: If `true`, cordova-serve won't output `Static file server running on...` message.
 * **events**: An `EventEmitter` to use for logging. If provided, logging will be output using `events.emit('log', msg)`.
   If not provided, `console.log()` will be used. Note that nothing will be output in either case if `noLogOutput` is `true`.
+* **middleware**: Specified path for custom middleware to be used on the express server. Path is specified relative to the current working directory.
