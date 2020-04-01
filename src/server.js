@@ -29,11 +29,11 @@ const express = require('express');
  */
 module.exports = function (opts) {
     const that = this;
-    const promise = new Promise(function (resolve, reject) {
+    const promise = new Promise((resolve, reject) => {
         opts = opts || {};
         let port = opts.port || 8000;
 
-        const log = module.exports.log = function (msg) {
+        const log = module.exports.log = msg => {
             if (!opts.noLogOutput) {
                 if (opts.events) {
                     opts.events.emit('log', msg);
@@ -64,7 +64,7 @@ module.exports = function (opts) {
         }
 
         const listener = server.listen(port);
-        listener.on('listening', function () {
+        listener.on('listening', () => {
             that.port = port;
             const message = 'Static file server running on: ' + chalk.green('http://localhost:' + port) + ' (CTRL + C to shut down)';
             if (!opts.noServerInfo) {
@@ -72,7 +72,7 @@ module.exports = function (opts) {
             }
             resolve(message);
         });
-        listener.on('error', function (e) {
+        listener.on('error', e => {
             if (e && e.toString().indexOf('EADDRINUSE') > -1) {
                 port++;
                 server.listen(port);

@@ -34,7 +34,7 @@ module.exports = function (platform, opts) {
     // note: `this` is actually an instance of main.js CordovaServe
     // this module is a mixin
     const that = this;
-    const retPromise = new Promise(function (resolve, reject) {
+    const retPromise = new Promise((resolve, reject) => {
         if (!platform) {
             reject(new Error('Error: A platform must be specified'));
         } else {

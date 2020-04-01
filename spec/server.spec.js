@@ -24,13 +24,13 @@ function expectPromise (obj) {
     expect(obj).toBe(Promise.resolve(obj));
 }
 
-describe('server', function () {
-    it('exists and has expected properties', function () {
+describe('server', () => {
+    it('exists and has expected properties', () => {
         expect(server).toBeDefined();
         expect(typeof server).toBe('function');
     });
 
-    it('should return a promise', function () {
+    it('should return a promise', () => {
         const result = server({ port: 8008, noServerInfo: 1 });
         expect(result).toBeDefined();
         expectPromise(result);
