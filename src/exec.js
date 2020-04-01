@@ -40,13 +40,13 @@ module.exports = function (cmd, opt_cwd) {
             child_process.exec(cmd, opt, (err, stdout, stderr) => {
                 clearTimeout(timerID);
                 if (err) {
-                    reject(new Error('Error executing "' + cmd + '": ' + stderr));
+                    reject(new Error(`Error executing "${cmd}": ${stderr}`));
                 } else {
                     resolve(stdout);
                 }
             });
         } catch (e) {
-            console.error('error caught: ' + e);
+            console.error(`error caught: ${e}`);
             reject(e);
         }
     });
