@@ -15,7 +15,7 @@
     under the License.
 */
 
-var rewire = require('rewire');
+const rewire = require('rewire');
 
 function expectPromise (obj) {
     // 3 slightly different ways of verifying a promise
@@ -37,7 +37,7 @@ describe('browser', function () {
     });
 
     it('should return a promise', function () {
-        var result = browser();
+        const result = browser();
         expect(result).toBeDefined();
         expectPromise(result);
 
@@ -45,9 +45,9 @@ describe('browser', function () {
     });
 
     it('should call open() when target is `default`', function () {
-        var mockUrl = 'this is the freakin url';
+        const mockUrl = 'this is the freakin url';
 
-        var result = browser({ target: 'default', url: mockUrl });
+        const result = browser({ target: 'default', url: mockUrl });
         expect(result).toBeDefined();
         expectPromise(result);
 

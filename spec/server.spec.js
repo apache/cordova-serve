@@ -15,7 +15,7 @@
     under the License.
 */
 
-var server = require('../src/server');
+const server = require('../src/server');
 
 function expectPromise (obj) {
     // 3 slightly different ways of verifying a promise
@@ -31,7 +31,7 @@ describe('server', function () {
     });
 
     it('should return a promise', function () {
-        var result = server({ port: 8008, noServerInfo: 1 });
+        const result = server({ port: 8008, noServerInfo: 1 });
         expect(result).toBeDefined();
         expectPromise(result);
         return result;

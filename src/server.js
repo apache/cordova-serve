@@ -19,8 +19,8 @@
 
 /* globals Promise: true */
 
-var chalk = require('chalk');
-var express = require('express');
+const chalk = require('chalk');
+const express = require('express');
 
 /**
  * @desc Launches a server with the specified options and optional custom handlers.
@@ -28,12 +28,12 @@ var express = require('express');
  * @returns {*|promise}
  */
 module.exports = function (opts) {
-    var that = this;
-    var promise = new Promise(function (resolve, reject) {
+    const that = this;
+    const promise = new Promise(function (resolve, reject) {
         opts = opts || {};
-        var port = opts.port || 8000;
+        let port = opts.port || 8000;
 
-        var log = module.exports.log = function (msg) {
+        const log = module.exports.log = function (msg) {
             if (!opts.noLogOutput) {
                 if (opts.events) {
                     opts.events.emit('log', msg);
@@ -43,8 +43,8 @@ module.exports = function (opts) {
             }
         };
 
-        var app = that.app;
-        var server = require('http').Server(app);
+        const app = that.app;
+        const server = require('http').Server(app);
         that.server = server;
 
         if (opts.router) {
@@ -63,10 +63,10 @@ module.exports = function (opts) {
             app.use(express.static(that.projectRoot));
         }
 
-        var listener = server.listen(port);
+        const listener = server.listen(port);
         listener.on('listening', function () {
             that.port = port;
-            var message = 'Static file server running on: ' + chalk.green('http://localhost:' + port) + ' (CTRL + C to shut down)';
+            const message = 'Static file server running on: ' + chalk.green('http://localhost:' + port) + ' (CTRL + C to shut down)';
             if (!opts.noServerInfo) {
                 log(message);
             }
