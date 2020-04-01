@@ -105,7 +105,7 @@ function isRootDir (dir) {
 }
 
 module.exports = {
-    cordovaProjectRoot: cordovaProjectRoot,
-    getPlatformWwwRoot: getPlatformWwwRoot,
-    platforms: platforms
+    cordovaProjectRoot,
+    getPlatformWwwRoot,
+    platforms
 };
