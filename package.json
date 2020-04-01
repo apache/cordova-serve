@@ -5,8 +5,9 @@
   "main": "src/main.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint && npm run test:unit",
-    "test:unit": "jasmine \"spec/**/*.spec.js\""
+    "test": "npm run lint && npm run cover",
+    "test:unit": "jasmine \"spec/**/*.spec.js\"",
+    "cover": "nyc npm run test:unit"
   },
   "repository": "github:apache/cordova-serve",
   "bugs": "https://github.com/apache/cordova-serve/issues",
@@ -27,10 +28,22 @@
   "devDependencies": {
     "@cordova/eslint-config": "^3.0.0",
     "jasmine": "^3.5.0",
+    "nyc": "^15.0.0",
     "rewire": "^5.0.0"
   },
   "engines": {
     "node": ">= 10",
     "npm": ">= 5.6.0"
+  },
+  "nyc": {
+    "all": true,
+    "exclude": [
+      "coverage/",
+      "spec/"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ]
   }
 }
