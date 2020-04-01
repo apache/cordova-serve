@@ -21,7 +21,7 @@
 
 var child_process = require('child_process');
 var fs = require('fs');
-var open = require('opn');
+var open = require('open');
 var which = require('which');
 var exec = require('./exec');
 
