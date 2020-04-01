@@ -21,6 +21,8 @@
 
 [![NPM](https://nodei.co/npm/cordova-serve.png)](https://nodei.co/npm/cordova-serve/)
 
+[![Node CI](https://github.com/apache/cordova-serve/workflows/Node%20CI/badge.svg?branch=master)](https://github.com/apache/cordova-serve/actions?query=branch%3Amaster)
+
 # cordova-serve
 This module can be used to serve up a Cordova application in the browser. It has no command-line, but rather is intended
 to be called using the following API:
