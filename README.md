@@ -19,9 +19,9 @@
 #
 -->
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ewv1mhbvms0bfm26?svg=true)](https://ci.appveyor.com/project/ApacheSoftwareFoundation/cordova-serve/branch/master)
-[![Build Status](https://travis-ci.org/apache/cordova-serve.svg?branch=master)](https://travis-ci.org/apache/cordova-serve)
 [![NPM](https://nodei.co/npm/cordova-serve.png)](https://nodei.co/npm/cordova-serve/)
+
+[![Node CI](https://github.com/apache/cordova-serve/workflows/Node%20CI/badge.svg?branch=master)](https://github.com/apache/cordova-serve/actions?query=branch%3Amaster)
 
 # cordova-serve
 This module can be used to serve up a Cordova application in the browser. It has no command-line, but rather is intended
