@@ -25,7 +25,7 @@
 
 [![Node CI](https://github.com/apache/cordova-serve/workflows/Node%20CI/badge.svg?branch=master)](https://github.com/apache/cordova-serve/actions?query=branch%3Amaster)
 
-This module can be used to serve up a Cordova application in the browser. It has no command-line, and is intended to be called APIs.
+This module provides a JavaScript API to serve up a Cordova application in the browser.
 
 **API Example:**
 
