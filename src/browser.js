@@ -130,7 +130,7 @@ function getBrowser (target, dataDir) {
 
     if (target in browsers[process.platform]) {
         const browser = browsers[process.platform][target];
-        return checkBrowserExistsWindows(browser, target).then(() => Promise.resolve(browser));
+        return checkBrowserExistsWindows(browser, target).then(() => browser);
     } else {
         return Promise.reject(NOT_SUPPORTED.replace('%target%', target));
     }
