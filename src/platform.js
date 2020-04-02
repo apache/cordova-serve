@@ -44,7 +44,7 @@ module.exports = function (platform, opts) {
             opts.root = util.getPlatformWwwRoot(projectRoot, platform);
 
             if (!fs.existsSync(opts.root)) {
-                reject(new Error('Error: Project does not include the specified platform: ' + platform));
+                reject(new Error(`Error: Project does not include the specified platform: ${platform}`));
             } else {
                 return resolve(that.launchServer(opts));
             }
@@ -59,7 +59,7 @@ function findProjectRoot (path) {
         if (!path) {
             throw new Error('Current directory does not appear to be in a Cordova project.');
         } else {
-            throw new Error('Directory "' + path + '" does not appear to be in a Cordova project.');
+            throw new Error(`Directory "${path}" does not appear to be in a Cordova project.`);
         }
     }
     return projectRoot;

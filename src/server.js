@@ -66,7 +66,7 @@ module.exports = function (opts) {
         const listener = server.listen(port);
         listener.on('listening', () => {
             that.port = port;
-            const message = 'Static file server running on: ' + chalk.green('http://localhost:' + port) + ' (CTRL + C to shut down)';
+            const message = `Static file server running on: ${chalk.green(`http://localhost:${port}`)} (CTRL + C to shut down)`;
             if (!opts.noServerInfo) {
                 log(message);
             }

@@ -69,7 +69,7 @@ module.exports = function (opts) {
                 // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
 
                 if (target === 'edge') {
-                    browser += ':' + url;
+                    browser += `:${url}`;
                     urlAdded = true;
                 }
 
@@ -104,25 +104,25 @@ module.exports = function (opts) {
 function getBrowser (target, dataDir) {
     dataDir = dataDir || 'temp_chrome_user_data_dir_for_cordova';
 
-    const chromeArgs = ' --user-data-dir=/tmp/' + dataDir;
+    const chromeArgs = ` --user-data-dir=/tmp/${dataDir}`;
     const browsers = {
         win32: {
             ie: 'iexplore',
-            chrome: 'chrome --user-data-dir=%TEMP%\\' + dataDir,
+            chrome: `chrome --user-data-dir=%TEMP%\\${dataDir}`,
             safari: 'safari',
             opera: 'opera',
             firefox: 'firefox',
             edge: 'microsoft-edge'
         },
         darwin: {
-            chrome: '"Google Chrome" --args' + chromeArgs,
+            chrome: `"Google Chrome" --args${chromeArgs}`,
             safari: 'safari',
             firefox: 'firefox',
             opera: 'opera'
         },
         linux: {
-            chrome: 'google-chrome' + chromeArgs,
-            chromium: 'chromium-browser' + chromeArgs,
+            chrome: `google-chrome${chromeArgs}`,
+            chromium: `chromium-browser${chromeArgs}`,
             firefox: 'firefox',
             opera: 'opera'
         }

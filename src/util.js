@@ -74,7 +74,7 @@ function cordovaProjectRoot (dir) {
 function getPlatformWwwRoot (cordovaProjectRoot, platformName) {
     const platform = platforms[platformName];
     if (!platform) {
-        throw new Error('Unrecognized platform: ' + platformName);
+        throw new Error(`Unrecognized platform: ${platformName}`);
     }
 
     try {
