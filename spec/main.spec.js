@@ -15,7 +15,7 @@
     under the License.
 */
 
-var main = require('..');
+const main = require('..');
 
 describe('main', function () {
     it('exists and has expected properties', function () {
@@ -25,7 +25,7 @@ describe('main', function () {
     });
 
     it('is creatable', function () {
-        var instance = main();
+        const instance = main();
         expect(instance.servePlatform).toBeDefined();
         expect(typeof instance.servePlatform).toBe('function');
 

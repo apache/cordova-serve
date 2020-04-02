@@ -19,7 +19,7 @@
 
 /* globals Promise: true */
 
-var child_process = require('child_process');
+const child_process = require('child_process');
 
 /**
  * Executes the command specified.
@@ -30,8 +30,8 @@ var child_process = require('child_process');
 module.exports = function (cmd, opt_cwd) {
     return new Promise(function (resolve, reject) {
         try {
-            var opt = { cwd: opt_cwd, maxBuffer: 1024000 };
-            var timerID = 0;
+            const opt = { cwd: opt_cwd, maxBuffer: 1024000 };
+            let timerID = 0;
             if (process.platform === 'linux') {
                 timerID = setTimeout(function () {
                     resolve('linux-timeout');
