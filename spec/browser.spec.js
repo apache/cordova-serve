@@ -24,19 +24,19 @@ function expectPromise (obj) {
     expect(obj).toBe(Promise.resolve(obj));
 }
 
-describe('browser', function () {
+describe('browser', () => {
     let browser;
     beforeEach(() => {
         browser = rewire('../src/browser');
         browser.__set__('open', jasmine.createSpy('mockOpen'));
     });
 
-    it('exists and has expected properties', function () {
+    it('exists and has expected properties', () => {
         expect(browser).toBeDefined();
         expect(typeof browser).toBe('function');
     });
 
-    it('should return a promise', function () {
+    it('should return a promise', () => {
         const result = browser();
         expect(result).toBeDefined();
         expectPromise(result);
@@ -44,7 +44,7 @@ describe('browser', function () {
         return result;
     });
 
-    it('should call open() when target is `default`', function () {
+    it('should call open() when target is `default`', () => {
         const mockUrl = 'this is the freakin url';
 
         const result = browser({ target: 'default', url: mockUrl });
@@ -68,15 +68,15 @@ describe('browser', function () {
             expect(regItemPattern.exec(input)[2]).toBe(appPath);
         }
 
-        it('should recognize browser from registry with key "Default" on English Windows 10', function () {
+        it('should recognize browser from registry with key "Default" on English Windows 10', () => {
             expectPatternToExtractPathFrom(`${regPath} (Default)    REG_SZ    ${appPath}`);
         });
 
-        it('should recognize browser from registry with key "Standard" on non-English Windows 10', function () {
+        it('should recognize browser from registry with key "Standard" on non-English Windows 10', () => {
             expectPatternToExtractPathFrom(`${regPath} (Standard)    REG_SZ    ${appPath}`);
         });
 
-        it('should recognize browser with non-Latin registry key on Russian Windows 10', function () {
+        it('should recognize browser with non-Latin registry key on Russian Windows 10', () => {
             expectPatternToExtractPathFrom(`${regPath} (�� 㬮�砭��)    REG_SZ    ${appPath}`);
         });
     });

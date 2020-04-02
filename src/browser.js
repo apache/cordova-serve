@@ -47,7 +47,7 @@ module.exports = function (opts) {
         open(url);
         return Promise.resolve();
     } else {
-        return getBrowser(target, opts.dataDir).then(function (browser) {
+        return getBrowser(target, opts.dataDir).then(browser => {
             let args;
             let urlAdded = false;
 
@@ -87,7 +87,7 @@ module.exports = function (opts) {
             }
             const command = args.join(' ');
             const result = exec(command);
-            result.catch(function () {
+            result.catch(() => {
                 // Assume any error means that the browser is not installed and display that as a more friendly error.
                 throw new Error(NOT_INSTALLED.replace('%target%', target));
             });
@@ -130,9 +130,7 @@ function getBrowser (target, dataDir) {
 
     if (target in browsers[process.platform]) {
         const browser = browsers[process.platform][target];
-        return checkBrowserExistsWindows(browser, target).then(function () {
-            return Promise.resolve(browser);
-        });
+        return checkBrowserExistsWindows(browser, target).then(() => browser);
     } else {
         return Promise.reject(NOT_SUPPORTED.replace('%target%', target));
     }
@@ -151,22 +149,22 @@ function getErrorMessage (err, target, defaultMsg) {
 }
 
 function checkBrowserExistsWindows (browser, target) {
-    const promise = new Promise(function (resolve, reject) {
+    const promise = new Promise((resolve, reject) => {
         // Windows displays a dialog if the browser is not installed. We'd prefer to avoid that.
         if (process.platform === 'win32') {
             if (target === 'edge') {
-                edgeSupported().then(function () {
+                edgeSupported().then(() => {
                     resolve();
                 })
-                    .catch(function (err) {
+                    .catch(err => {
                         const errMessage = getErrorMessage(err, target, NOT_INSTALLED);
                         reject(errMessage);
                     });
             } else {
-                browserInstalled(browser).then(function () {
+                browserInstalled(browser).then(() => {
                     resolve();
                 })
-                    .catch(function (err) {
+                    .catch(err => {
                         const errMessage = getErrorMessage(err, target, NOT_INSTALLED);
                         reject(errMessage);
                     });
@@ -179,8 +177,8 @@ function checkBrowserExistsWindows (browser, target) {
 }
 
 function edgeSupported () {
-    const prom = new Promise(function (resolve, reject) {
-        child_process.exec('ver', function (err, stdout, stderr) {
+    const prom = new Promise((resolve, reject) => {
+        child_process.exec('ver', (err, stdout, stderr) => {
             if (err || stderr) {
                 reject(err || stderr);
             } else {
@@ -203,7 +201,7 @@ function browserInstalled (browser) {
     // for the list of extensions to use if no extension is provided. We simplify that to just '.EXE'
     // since that is what all the supported browsers use. Check path (simple but usually won't get a hit)
 
-    const promise = new Promise(function (resolve, reject) {
+    const promise = new Promise((resolve, reject) => {
         if (which.sync(browser, { nothrow: true })) {
             return resolve();
         } else {
@@ -211,7 +209,7 @@ function browserInstalled (browser) {
             const regQPost = '.EXE" /v ""';
             const regQuery = regQPre + browser.split(' ')[0] + regQPost;
 
-            child_process.exec(regQuery, function (err, stdout, stderr) {
+            child_process.exec(regQuery, (err, stdout, stderr) => {
                 if (err) {
                     // The registry key does not exist, which just means the app is not installed.
                     reject(err);
