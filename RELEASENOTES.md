@@ -20,6 +20,34 @@
 -->
 # Cordova-serve Release Notes
 
+### 4.0.0 (Apr 08, 2020)
+
+* [GH-31](https://github.com/apache/cordova-serve/pull/31) doc(README): formatting, syntax updating, wording
+* [GH-35](https://github.com/apache/cordova-serve/pull/35) refactor: transform template
+* [GH-34](https://github.com/apache/cordova-serve/pull/34) refactor: transform object shorthand
+* [GH-33](https://github.com/apache/cordova-serve/pull/33) refactor: transform arrow & arrow-returns
+* [GH-32](https://github.com/apache/cordova-serve/pull/32) refactor: transform `var` to `let` & `const`
+* [GH-30](https://github.com/apache/cordova-serve/pull/30) breaking: replace dependency `opn` w/ `open`
+* [GH-29](https://github.com/apache/cordova-serve/pull/29) ci: replace existing services with GitHub Actions
+* [GH-27](https://github.com/apache/cordova-serve/pull/27) chore(npm): update package & add ignore list
+* [GH-28](https://github.com/apache/cordova-serve/pull/28) breaking(npm): bump dependencies
+  * `@cordova/eslint-config@^3.0.0`
+  * `rewire@^5.0.0`
+  * `chalk@^3.0.0`
+  * `compression@^1.7.4`
+  * `express@^4.17.1`
+  * `opn@^6.0.0`
+  * `which@^2.0.2`
+* [GH-25](https://github.com/apache/cordova-serve/pull/25) chore: consolidate `eslint` configs
+* [GH-24](https://github.com/apache/cordova-serve/pull/24) chore: update `jasmine` dependencies & settings
+* [GH-23](https://github.com/apache/cordova-serve/pull/23) refactor: `eslint` setup
+* [GH-22](https://github.com/apache/cordova-serve/pull/22) chore: drop node 6 and 8 support
+* [GH-20](https://github.com/apache/cordova-serve/pull/20) Spec cleanup
+* [GH-19](https://github.com/apache/cordova-serve/pull/19) Improve linting
+* [GH-17](https://github.com/apache/cordova-serve/pull/17) chore: remove appveyor allow node12 failure
+* [GH-16](https://github.com/apache/cordova-serve/pull/16) Add Node.js 12 to CI Services
+* Add or update GitHub pull request and issue template
+
 ### 3.0.0 (Dec 20, 2018)
 * [CB-14198](https://issues.apache.org/jira/browse/CB-14198) (all) Fix bug when running simulate --target= under non-US **Windows** 10 (#14)
 * Don't restore mocked resource prior to resolution (#15)
