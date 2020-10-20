@@ -68,11 +68,6 @@ module.exports = function (opts) {
                 // Furthermore, if "cmd /c" double-quoted the first parameter, then "start" will interpret it as a window title,
                 // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
 
-                if (target === 'edge') {
-                    browser += `:${url}`;
-                    urlAdded = true;
-                }
-
                 args = ['cmd /c start ""', browser];
                 break;
             case 'linux':
@@ -112,7 +107,7 @@ function getBrowser (target, dataDir) {
             safari: 'safari',
             opera: 'opera',
             firefox: 'firefox',
-            edge: 'microsoft-edge'
+            edge: 'msedge'
         },
         darwin: {
             chrome: `"Google Chrome" --args${chromeArgs}`,
@@ -152,46 +147,19 @@ function checkBrowserExistsWindows (browser, target) {
     const promise = new Promise((resolve, reject) => {
         // Windows displays a dialog if the browser is not installed. We'd prefer to avoid that.
         if (process.platform === 'win32') {
-            if (target === 'edge') {
-                edgeSupported().then(() => {
+            browserInstalled(browser)
+                .then(() => {
                     resolve();
                 })
-                    .catch(err => {
-                        const errMessage = getErrorMessage(err, target, NOT_INSTALLED);
-                        reject(errMessage);
-                    });
-            } else {
-                browserInstalled(browser).then(() => {
-                    resolve();
-                })
-                    .catch(err => {
-                        const errMessage = getErrorMessage(err, target, NOT_INSTALLED);
-                        reject(errMessage);
-                    });
-            }
+                .catch(err => {
+                    const errMessage = getErrorMessage(err, target, NOT_INSTALLED);
+                    reject(errMessage);
+                });
         } else {
             resolve();
         }
     });
     return promise;
-}
-
-function edgeSupported () {
-    const prom = new Promise((resolve, reject) => {
-        child_process.exec('ver', (err, stdout, stderr) => {
-            if (err || stderr) {
-                reject(err || stderr);
-            } else {
-                const windowsVersion = stdout.match(/([0-9.])+/g)[0];
-                if (parseInt(windowsVersion) < 10) {
-                    reject(new Error('The browser target is not supported on this version of Windows: %target%'));
-                } else {
-                    resolve();
-                }
-            }
-        });
-    });
-    return prom;
 }
 
 const regItemPattern = /\s*\([^)]+\)\s+(REG_SZ)\s+([^\s].*)\s*/;
