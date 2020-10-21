@@ -134,7 +134,7 @@ cordovaServe.launchBrowser(options).then(
 Options | Description
 -|-
 `url` | The URL to open in the browser.
-`target` | The browser identifier to launch. **Valid identifier**: `chrome`, `chromium`, `firefox`, `ie`, `opera`, `safari`. (**Default:** `chrome`.)
+`target` | The browser identifier to launch. **Valid identifier**: `chrome`, `chromium`, `firefox`, `ie`, `edge`, `opera`, `safari`. (**Default:** `chrome`.)
 
 **Return:**
 

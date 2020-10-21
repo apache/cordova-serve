@@ -32,7 +32,7 @@ const NOT_SUPPORTED = 'The browser target is not supported: %target%';
  * Launches the specified browser with the given URL.
  * Based on https://github.com/domenic/opener
  * @param {{target: ?string, url: ?string, dataDir: ?string}} opts - parameters:
- *   target - the target browser - ie, chrome, safari, opera, firefox or chromium
+ *   target - the target browser - ie, edge, chrome, safari, opera, firefox or chromium
  *   url - the url to open in the browser
  *   dataDir - a data dir to provide to Chrome (can be used to force it to open in a new window)
  * @return {Promise} Promise to launch the specified browser
@@ -107,13 +107,14 @@ function getBrowser (target, dataDir) {
             safari: 'safari',
             opera: 'opera',
             firefox: 'firefox',
-            edge: 'msedge'
+            edge: `msedge --user-data-dir=%TEMP%\\${dataDir}`
         },
         darwin: {
             chrome: `"Google Chrome" --args${chromeArgs}`,
             safari: 'safari',
             firefox: 'firefox',
-            opera: 'opera'
+            opera: 'opera',
+            edge: `"Microsoft Edge" --args${chromeArgs}`
         },
         linux: {
             chrome: `google-chrome${chromeArgs}`,
