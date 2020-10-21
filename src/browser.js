@@ -49,7 +49,6 @@ module.exports = function (opts) {
     } else {
         return getBrowser(target, opts.dataDir).then(browser => {
             let args;
-            let urlAdded = false;
 
             switch (process.platform) {
             case 'darwin':
@@ -77,9 +76,7 @@ module.exports = function (opts) {
                 break;
             }
 
-            if (!urlAdded) {
-                args.push(url);
-            }
+            args.push(url);
             const command = args.join(' ');
             const result = exec(command);
             result.catch(() => {
