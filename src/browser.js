@@ -76,7 +76,7 @@ module.exports = function (opts) {
                 break;
             }
 
-            args.push(url); 
+            args.push(url);
             const command = args.join(' ');
             const result = exec(command);
             result.catch(() => {
