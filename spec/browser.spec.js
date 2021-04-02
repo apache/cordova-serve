@@ -81,27 +81,21 @@ describe('browser', () => {
         });
     });
 
-    describe('getBrowser', () => {
-        let getBrowser;
-        beforeEach(() => {
-            getBrowser = browser.__get__('getBrowser');
-        });
+    it('should append user arguments to getBrowser results', function (done) {
+        const getBrowser = browser.__get__('getBrowser');
+        const someCoolArgument = 'SOME COOL ARGUMENT';
+        const result = getBrowser(/* target */ 'chrome', /* dataDir */ null, /* userArgs */ someCoolArgument);
+        expect(result).toBeDefined();
+        expectPromise(result);
 
-        it('should append user arguments to getBrowser results', function (done) {
-            const someCoolArgument = 'SOME COOL ARGUMENT';
-            const result = getBrowser(/* target */ 'chrome', /* dataDir */ null, /* userArgs */ someCoolArgument);
-            expect(result).toBeDefined();
-            expectPromise(result);
-
-            result.then((res) => {
-                const endsWithSomeCoolArgument = res.endsWith(someCoolArgument);
-                expect(endsWithSomeCoolArgument).toBe(true);
-                if (!endsWithSomeCoolArgument) {
-                    done(res);
-                } else {
-                    done();
-                }
-            });
+        result.then((res) => {
+            const endsWithSomeCoolArgument = res.endsWith(someCoolArgument);
+            expect(endsWithSomeCoolArgument).toBe(true);
+            if (!endsWithSomeCoolArgument) {
+                done(res);
+            } else {
+                done();
+            }
         });
     });
 });
