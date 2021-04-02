@@ -15,33 +15,25 @@
     under the License.
 */
 
-var server = require("../src/server");
+const server = require('../src/server');
 
-function expectPromise(obj){
+function expectPromise (obj) {
     // 3 slightly different ways of verifying a promise
     expect(typeof obj.then).toBe('function');
     expect(obj instanceof Promise).toBe(true);
     expect(obj).toBe(Promise.resolve(obj));
 }
 
-describe('server', function() {
-
-    it('exists and has expected properties', function() {
+describe('server', () => {
+    it('exists and has expected properties', () => {
         expect(server).toBeDefined();
         expect(typeof server).toBe('function');
     });
 
-    it('should return a promise', function(done) {
-        var result = server({port:8008,noServerInfo:1});
+    it('should return a promise', () => {
+        const result = server({ port: 8008, noServerInfo: 1 });
         expect(result).toBeDefined();
         expectPromise(result);
-        result.then(function(res) {
-            // console.log("success : " + res);
-            done();
-        });
-        result.catch(function(err){
-            // console.log("error : " + err);
-            done();
-        });
+        return result;
     });
 });

@@ -15,18 +15,17 @@
     under the License.
 */
 
-var main = require("..");
+const main = require('..');
 
-describe('main', function() {
-
-    it('exists and has expected properties', function() {
+describe('main', () => {
+    it('exists and has expected properties', () => {
         expect(main).toBeDefined();
         expect(main.Router).toBeDefined();
         expect(main.static).toBeDefined();
     });
 
-    it('is creatable',function() {
-        var instance = main();
+    it('is creatable', () => {
+        const instance = main();
         expect(instance.servePlatform).toBeDefined();
         expect(typeof instance.servePlatform).toBe('function');
 

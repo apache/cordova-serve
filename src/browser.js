@@ -19,14 +19,14 @@
 
 /* globals Promise: true */
 
-var child_process = require('child_process');
-var fs = require('fs');
-var open = require('opn');
-var which = require('which');
-var exec = require('./exec');
+const child_process = require('child_process');
+const fs = require('fs');
+const open = require('open');
+const which = require('which');
+const exec = require('./exec');
 
-var NOT_INSTALLED = 'The browser target is not installed: %target%';
-var NOT_SUPPORTED = 'The browser target is not supported: %target%';
+const NOT_INSTALLED = 'The browser target is not installed: %target%';
+const NOT_SUPPORTED = 'The browser target is not supported: %target%';
 
 /**
  * Launches the specified browser with the given URL.
@@ -38,19 +38,18 @@ var NOT_SUPPORTED = 'The browser target is not supported: %target%';
  * @return {Promise} Promise to launch the specified browser
  */
 module.exports = function (opts) {
-
     opts = opts || {};
-    var target = opts.target || 'default';
-    var url = opts.url || '';
+    let target = opts.target || 'default';
+    const url = opts.url || '';
 
     target = target.toLowerCase();
     if (target === 'default') {
         open(url);
         return Promise.resolve();
     } else {
-        return getBrowser(target, opts.dataDir, opts.userArgs).then(function (browser) {
-            var args;
-            var urlAdded = false;
+        return getBrowser(target, opts.dataDir, opts.userArgs).then(browser => {
+            let args;
+            let urlAdded = false;
 
             switch (process.platform) {
             case 'darwin':
@@ -70,7 +69,7 @@ module.exports = function (opts) {
                 // so we need to add a dummy empty-string window title: http://stackoverflow.com/a/154090/3191
 
                 if (target === 'edge') {
-                    browser += ':' + url;
+                    browser += `:${url}`;
                     urlAdded = true;
                 }
 
@@ -86,9 +85,9 @@ module.exports = function (opts) {
             if (!urlAdded) {
                 args.push(url);
             }
-            var command = args.join(' ');
-            var result = exec(command);
-            result.catch(function () {
+            const command = args.join(' ');
+            const result = exec(command);
+            result.catch(() => {
                 // Assume any error means that the browser is not installed and display that as a more friendly error.
                 throw new Error(NOT_INSTALLED.replace('%target%', target));
             });
@@ -109,45 +108,42 @@ function getBrowser (target, dataDir, userArgs) {
         userArgs = ' ' + userArgs;
     }
 
-    var chromeArgs = ' --user-data-dir=/tmp/' + dataDir;
-    var browsers = {
-        'win32': {
-            'ie': 'iexplore',
-            'chrome': 'chrome --user-data-dir=%TEMP%\\' + dataDir,
-            'safari': 'safari',
-            'opera': 'opera',
-            'firefox': 'firefox',
-            'edge': 'microsoft-edge'
+    const chromeArgs = ` --user-data-dir=/tmp/${dataDir}`;
+    const browsers = {
+        win32: {
+            ie: 'iexplore',
+            chrome: `chrome --user-data-dir=%TEMP%\\${dataDir}`,
+            safari: 'safari',
+            opera: 'opera',
+            firefox: 'firefox',
+            edge: 'microsoft-edge'
         },
-        'darwin': {
-            'chrome': '"Google Chrome" --args' + chromeArgs,
-            'safari': 'safari',
-            'firefox': 'firefox',
-            'opera': 'opera'
+        darwin: {
+            chrome: `"Google Chrome" --args${chromeArgs}`,
+            safari: 'safari',
+            firefox: 'firefox',
+            opera: 'opera'
         },
-        'linux': {
-            'chrome': 'google-chrome' + chromeArgs,
-            'chromium': 'chromium-browser' + chromeArgs,
-            'firefox': 'firefox',
-            'opera': 'opera'
+        linux: {
+            chrome: `google-chrome${chromeArgs}`,
+            chromium: `chromium-browser${chromeArgs}`,
+            firefox: 'firefox',
+            opera: 'opera'
         }
     };
 
     if (target in browsers[process.platform]) {
-        var browser = browsers[process.platform][target];
-        return checkBrowserExistsWindows(browser, target).then(function () {
-            return Promise.resolve(browser + userArgs);
-        });
+        const browser = browsers[process.platform][target];
+        return checkBrowserExistsWindows(browser, target).then(() => browser + userArgs);
     } else {
         return Promise.reject(NOT_SUPPORTED.replace('%target%', target));
     }
-
 }
 
 // err might be null, in which case defaultMsg is used.
 // target MUST be defined or an error is thrown.
 function getErrorMessage (err, target, defaultMsg) {
-    var errMessage;
+    let errMessage;
     if (err) {
         errMessage = err.toString();
     } else {
@@ -157,41 +153,40 @@ function getErrorMessage (err, target, defaultMsg) {
 }
 
 function checkBrowserExistsWindows (browser, target) {
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise((resolve, reject) => {
         // Windows displays a dialog if the browser is not installed. We'd prefer to avoid that.
         if (process.platform === 'win32') {
             if (target === 'edge') {
-                edgeSupported().then(function () {
+                edgeSupported().then(() => {
                     resolve();
                 })
-                    .catch(function (err) {
-                        var errMessage = getErrorMessage(err, target, NOT_INSTALLED);
+                    .catch(err => {
+                        const errMessage = getErrorMessage(err, target, NOT_INSTALLED);
                         reject(errMessage);
                     });
             } else {
-                browserInstalled(browser).then(function () {
+                browserInstalled(browser).then(() => {
                     resolve();
                 })
-                    .catch(function (err) {
-                        var errMessage = getErrorMessage(err, target, NOT_INSTALLED);
+                    .catch(err => {
+                        const errMessage = getErrorMessage(err, target, NOT_INSTALLED);
                         reject(errMessage);
                     });
             }
         } else {
             resolve();
         }
-
     });
     return promise;
 }
 
 function edgeSupported () {
-    var prom = new Promise(function (resolve, reject) {
-        child_process.exec('ver', function (err, stdout, stderr) {
+    const prom = new Promise((resolve, reject) => {
+        child_process.exec('ver', (err, stdout, stderr) => {
             if (err || stderr) {
                 reject(err || stderr);
             } else {
-                var windowsVersion = stdout.match(/([0-9.])+/g)[0];
+                const windowsVersion = stdout.match(/([0-9.])+/g)[0];
                 if (parseInt(windowsVersion) < 10) {
                     reject(new Error('The browser target is not supported on this version of Windows: %target%'));
                 } else {
@@ -203,27 +198,27 @@ function edgeSupported () {
     return prom;
 }
 
-var regItemPattern = /\s*\([^)]+\)\s+(REG_SZ)\s+([^\s].*)\s*/;
+const regItemPattern = /\s*\([^)]+\)\s+(REG_SZ)\s+([^\s].*)\s*/;
 function browserInstalled (browser) {
     // On Windows, the 'start' command searches the path then 'App Paths' in the registry.
     // We do the same here. Note that the start command uses the PATHEXT environment variable
     // for the list of extensions to use if no extension is provided. We simplify that to just '.EXE'
     // since that is what all the supported browsers use. Check path (simple but usually won't get a hit)
 
-    var promise = new Promise(function (resolve, reject) {
+    const promise = new Promise((resolve, reject) => {
         if (which.sync(browser, { nothrow: true })) {
             return resolve();
         } else {
-            var regQPre = 'reg QUERY "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\';
-            var regQPost = '.EXE" /v ""';
-            var regQuery = regQPre + browser.split(' ')[0] + regQPost;
+            const regQPre = 'reg QUERY "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\';
+            const regQPost = '.EXE" /v ""';
+            const regQuery = regQPre + browser.split(' ')[0] + regQPost;
 
-            child_process.exec(regQuery, function (err, stdout, stderr) {
+            child_process.exec(regQuery, (err, stdout, stderr) => {
                 if (err) {
                     // The registry key does not exist, which just means the app is not installed.
                     reject(err);
                 } else {
-                    var result = regItemPattern.exec(stdout);
+                    const result = regItemPattern.exec(stdout);
                     if (fs.existsSync(trimRegPath(result[2]))) {
                         resolve();
                     } else {

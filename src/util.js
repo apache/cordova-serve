@@ -17,14 +17,14 @@
  under the License.
  */
 
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
 
 // Some helpful utility stuff copied from cordova-lib. This is a bit nicer than taking a dependency on cordova-lib just
 // to get this minimal stuff. Hopefully we won't need the platform stuff (finding platform www_dir) once it is moved
 // into the actual platform.
 
-var platforms = {
+const platforms = {
     amazon_fireos: { www_dir: 'assets/www' },
     android: { www_dir: 'assets/www' },
     blackberry10: { www_dir: 'www' },
@@ -44,24 +44,24 @@ var platforms = {
 function cordovaProjectRoot (dir) {
     if (!dir) {
         // Prefer PWD over cwd so that symlinked dirs within your PWD work correctly.
-        var pwd = process.env.PWD;
-        var cwd = process.cwd();
+        const pwd = process.env.PWD;
+        const cwd = process.cwd();
         if (pwd && pwd !== cwd && pwd !== 'undefined') {
             return cordovaProjectRoot(pwd) || cordovaProjectRoot(cwd);
         }
         return cordovaProjectRoot(cwd);
     }
 
-    var bestReturnValueSoFar = null;
-    for (var i = 0; i < 1000; ++i) {
-        var result = isRootDir(dir);
+    let bestReturnValueSoFar = null;
+    for (let i = 0; i < 1000; ++i) {
+        const result = isRootDir(dir);
         if (result === 2) {
             return dir;
         }
         if (result === 1) {
             bestReturnValueSoFar = dir;
         }
-        var parentDir = path.normalize(path.join(dir, '..'));
+        const parentDir = path.normalize(path.join(dir, '..'));
         // Detect fs root.
         if (parentDir === dir) {
             return bestReturnValueSoFar;
@@ -72,13 +72,13 @@ function cordovaProjectRoot (dir) {
 }
 
 function getPlatformWwwRoot (cordovaProjectRoot, platformName) {
-    var platform = platforms[platformName];
+    const platform = platforms[platformName];
     if (!platform) {
-        throw new Error('Unrecognized platform: ' + platformName);
+        throw new Error(`Unrecognized platform: ${platformName}`);
     }
 
     try {
-        var Api = require(path.join(cordovaProjectRoot, 'platforms', platformName, 'cordova/Api'));
+        const Api = require(path.join(cordovaProjectRoot, 'platforms', platformName, 'cordova/Api'));
         return new Api().locations.www;
     } catch (e) {
         // Fallback on hardcoded paths if platform api not found
@@ -105,7 +105,7 @@ function isRootDir (dir) {
 }
 
 module.exports = {
-    cordovaProjectRoot: cordovaProjectRoot,
-    getPlatformWwwRoot: getPlatformWwwRoot,
-    platforms: platforms
+    cordovaProjectRoot,
+    getPlatformWwwRoot,
+    platforms
 };

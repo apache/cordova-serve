@@ -19,8 +19,8 @@
 
 /* globals Promise: true */
 
-var fs = require('fs');
-var util = require('./util');
+const fs = require('fs');
+const util = require('./util');
 
 /**
  * Launches a server where the root points to the specified platform in a Cordova project.
@@ -31,37 +31,35 @@ var util = require('./util');
  * @returns {*|promise}
  */
 module.exports = function (platform, opts) {
-
     // note: `this` is actually an instance of main.js CordovaServe
     // this module is a mixin
-    var that = this;
-    var retPromise = new Promise(function (resolve, reject) {
+    const that = this;
+    const retPromise = new Promise((resolve, reject) => {
         if (!platform) {
             reject(new Error('Error: A platform must be specified'));
         } else {
             opts = opts || {};
-            var projectRoot = findProjectRoot(opts.root);
+            const projectRoot = findProjectRoot(opts.root);
             that.projectRoot = projectRoot;
             opts.root = util.getPlatformWwwRoot(projectRoot, platform);
 
             if (!fs.existsSync(opts.root)) {
-                reject(new Error('Error: Project does not include the specified platform: ' + platform));
+                reject(new Error(`Error: Project does not include the specified platform: ${platform}`));
             } else {
                 return resolve(that.launchServer(opts));
             }
         }
-
     });
     return retPromise;
 };
 
 function findProjectRoot (path) {
-    var projectRoot = util.cordovaProjectRoot(path);
+    const projectRoot = util.cordovaProjectRoot(path);
     if (!projectRoot) {
         if (!path) {
             throw new Error('Current directory does not appear to be in a Cordova project.');
         } else {
-            throw new Error('Directory "' + path + '" does not appear to be in a Cordova project.');
+            throw new Error(`Directory "${path}" does not appear to be in a Cordova project.`);
         }
     }
     return projectRoot;
