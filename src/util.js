@@ -41,7 +41,7 @@ const platforms = {
  * @param {string=} dir - the directory to start from (we check this directory then work up), or CWD if none specified.
  * @returns {string} - the Cordova project's root directory, or null if not found.
  */
-function cordovaProjectRoot (dir) {
+function cordovaProjectRoot(dir) {
     if (!dir) {
         // Prefer PWD over cwd so that symlinked dirs within your PWD work correctly.
         const pwd = process.env.PWD;
@@ -71,22 +71,23 @@ function cordovaProjectRoot (dir) {
     return null;
 }
 
-function getPlatformWwwRoot (cordovaProjectRoot, platformName) {
+function getPlatformWwwRoot(cordovaProjectRoot, platformName) {
     const platform = platforms[platformName];
     if (!platform) {
         throw new Error(`Unrecognized platform: ${platformName}`);
     }
 
     try {
-        const Api = require(path.join(cordovaProjectRoot, 'platforms', platformName, 'cordova/Api'));
-        return new Api().locations.www;
+        const platformRootFolder = path.join(cordovaProjectRoot, 'platforms', platformName);
+        const Api = require(path.join(platformRootFolder, 'cordova/Api'));
+        return new Api(platformName, platformRootFolder).locations.www;
     } catch (e) {
         // Fallback on hardcoded paths if platform api not found
         return path.join(cordovaProjectRoot, 'platforms', platformName, platform.www_dir);
     }
 }
 
-function isRootDir (dir) {
+function isRootDir(dir) {
     if (fs.existsSync(path.join(dir, 'www'))) {
         if (fs.existsSync(path.join(dir, 'config.xml'))) {
             // For sure is.
