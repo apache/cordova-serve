@@ -78,8 +78,9 @@ function getPlatformWwwRoot (cordovaProjectRoot, platformName) {
     }
 
     try {
-        const Api = require(path.join(cordovaProjectRoot, 'platforms', platformName, 'cordova/Api'));
-        return new Api().locations.www;
+        const platformRootFolder = path.join(cordovaProjectRoot, 'platforms', platformName);
+        const Api = require(path.join(platformRootFolder, 'cordova/Api'));
+        return new Api(platformName, platformRootFolder).locations.www;
     } catch (e) {
         // Fallback on hardcoded paths if platform api not found
         return path.join(cordovaProjectRoot, 'platforms', platformName, platform.www_dir);
