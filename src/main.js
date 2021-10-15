@@ -33,7 +33,7 @@ function CordovaServe () {
         res.on('finish', function () {
             const color = this.statusCode === '404' ? chalk.red : chalk.green;
             let msg = `${color(this.statusCode)} ${this.req.originalUrl}`;
-            let headers = this.getHeaders();
+            const headers = this.getHeaders();
             const encoding = headers && headers['content-encoding'];
             if (encoding) {
                 msg += chalk.gray(` (${encoding})`);
