@@ -20,6 +20,18 @@
 -->
 # Cordova-serve Release Notes
 
+### 4.0.1 (Jan 30, 2023)
+
+* [GH-49](https://github.com/apache/cordova-serve/pull/49), [GH-51](https://github.com/apache/cordova-serve/pull/51), [GH-53](https://github.com/apache/cordova-serve/pull/53) chore: rebuilt package-lock.json
+* [GH-52](https://github.com/apache/cordova-serve/pull/52) ci: update github action workflow
+* [GH-46](https://github.com/apache/cordova-serve/pull/46) fix(main.js): color of 404 status in console logs
+* [GH-45](https://github.com/apache/cordova-serve/pull/45) fix(main.js): resolve deprecation warning on Node.js 12
+* [GH-44](https://github.com/apache/cordova-serve/pull/44) fix: pass mandatory args to platform API constructor
+* chore(asf): Update GitHub repo metadata
+* [GH-38](https://github.com/apache/cordova-serve/pull/38) ci: add node 14 to workflow
+* chore(asf): update git notification settings
+* Update CONTRIBUTING.md
+
 ### 4.0.0 (Apr 08, 2020)
 
 * [GH-31](https://github.com/apache/cordova-serve/pull/31) doc(README): formatting, syntax updating, wording
