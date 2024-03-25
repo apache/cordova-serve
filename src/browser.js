@@ -32,7 +32,7 @@ const NOT_SUPPORTED = 'The browser target is not supported: %target%';
  * Launches the specified browser with the given URL.
  * Based on https://github.com/domenic/opener
  * @param {{target: ?string, url: ?string, dataDir: ?string}} opts - parameters:
- *   target - the target browser - ie, chrome, safari, opera, firefox or chromium
+ *   target - the target browser - ie, edge ,edgechromium, chrome, safari, opera, firefox or chromium
  *   url - the url to open in the browser
  *   dataDir - a data dir to provide to Chrome (can be used to force it to open in a new window)
  * @return {Promise} Promise to launch the specified browser
@@ -112,13 +112,15 @@ function getBrowser (target, dataDir) {
             safari: 'safari',
             opera: 'opera',
             firefox: 'firefox',
-            edge: 'microsoft-edge'
+            edge: 'microsoft-edge',
+            edgechromium: `msedge --user-data-dir=%TEMP%\\${dataDir}`
         },
         darwin: {
             chrome: `"Google Chrome" --args${chromeArgs}`,
             safari: 'safari',
             firefox: 'firefox',
-            opera: 'opera'
+            opera: 'opera',
+            edgechromium: `"Microsoft Edge" --args${chromeArgs}`
         },
         linux: {
             chrome: `google-chrome${chromeArgs}`,
@@ -153,7 +155,7 @@ function checkBrowserExistsWindows (browser, target) {
         // Windows displays a dialog if the browser is not installed. We'd prefer to avoid that.
         if (process.platform === 'win32') {
             if (target === 'edge') {
-                edgeSupported().then(() => {
+                oldEdgeSupported().then(() => {
                     resolve();
                 })
                     .catch(err => {
@@ -176,7 +178,7 @@ function checkBrowserExistsWindows (browser, target) {
     return promise;
 }
 
-function edgeSupported () {
+function oldEdgeSupported () {
     const prom = new Promise((resolve, reject) => {
         child_process.exec('ver', (err, stdout, stderr) => {
             if (err || stderr) {
