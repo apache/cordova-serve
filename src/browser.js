@@ -40,7 +40,7 @@ const NOT_SUPPORTED = 'The browser target is not supported: %target%';
 module.exports = function (opts) {
     opts = opts || {};
     let target = opts.target || 'default';
-    const url = opts.url || '';
+    const url = encodeURI(opts.url) || '';
 
     target = target.toLowerCase();
     if (target === 'default') {
@@ -103,6 +103,12 @@ module.exports = function (opts) {
 
 function getBrowser (target, dataDir) {
     dataDir = dataDir || 'temp_chrome_user_data_dir_for_cordova';
+    if (dataDir !== '') {
+        var validateDir = /^[0-9a-zA-Z._\s-%$]+$/i.test(dataDir);
+        if (validateDir === false) {
+            throw new Error('Invalid directory name');
+        }
+    }
 
     const chromeArgs = ` --user-data-dir=/tmp/${dataDir}`;
     const browsers = {
