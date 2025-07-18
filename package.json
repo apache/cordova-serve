@@ -19,11 +19,11 @@
   "author": "Apache Software Foundation",
   "license": "Apache-2.0",
   "dependencies": {
-    "chalk": "^3.0.0",
+    "chalk": "^4.1.2",
     "compression": "^1.7.4",
     "express": "^5.1.0",
-    "open": "^7.0.3",
-    "which": "^2.0.2"
+    "open": "^10.2.0",
+    "which": "^5.0.0"
   },
   "devDependencies": {
     "@cordova/eslint-config": "^5.1.0",
