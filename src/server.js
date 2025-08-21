@@ -17,8 +17,6 @@
     under the License.
 */
 
-/* globals Promise: true */
-
 const chalk = require('chalk');
 const express = require('express');
 
