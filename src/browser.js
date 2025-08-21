@@ -31,23 +31,26 @@ const NOT_SUPPORTED = 'The browser target is not supported: %target%';
 /**
  * Launches the specified browser with the given URL.
  * Based on https://github.com/domenic/opener
- * @param {{target: ?string, url: ?string, dataDir: ?string}} opts - parameters:
- *   target - the target browser - ie, chrome, safari, opera, firefox or chromium
- *   url - the url to open in the browser
- *   dataDir - a data dir to provide to Chrome (can be used to force it to open in a new window)
+ * @param {Object} opts
+ * @param {?string} [opts.target=default] target browser (E.g chrome, safari, opera, firefox or chromium)
+ * @param {?string} [opts.url=] url to open
+ * @param {?string} [opts.dataDir=temp_chrome_user_data_dir_for_cordova] a data dir to provide to Chrome (can be used to force it to open in a new window)
+ * @param {?string} [opts.userArgs=]
  * @return {Promise} Promise to launch the specified browser
  */
 module.exports = function (opts) {
     opts = opts || {};
-    let target = opts.target || 'default';
-    const url = opts.url || '';
 
-    target = target.toLowerCase();
+    const target = (opts.target || 'default').toLowerCase();
+    const url = opts.url || '';
+    const dataDir = opts.dataDir || 'temp_chrome_user_data_dir_for_cordova';
+    const userArgs = opts.userArgs || '';
+
     if (target === 'default') {
         open(url);
         return Promise.resolve();
     } else {
-        return getBrowser(target, opts.dataDir, opts.userArgs).then(browser => {
+        return getBrowser(target, dataDir, userArgs).then(browser => {
             let args;
             let urlAdded = false;
 
@@ -102,8 +105,6 @@ module.exports = function (opts) {
 };
 
 function getBrowser (target, dataDir, userArgs) {
-    dataDir = dataDir || 'temp_chrome_user_data_dir_for_cordova';
-    userArgs = userArgs || '';
     if (userArgs.length > 0) {
         userArgs = ' ' + userArgs;
     }
