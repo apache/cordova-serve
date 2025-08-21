@@ -17,7 +17,7 @@
     under the License.
 */
 
-const chalk = require('chalk');
+const { styleText } = require('node:util');
 const express = require('express');
 
 /**
@@ -64,7 +64,7 @@ module.exports = function (opts) {
         const listener = server.listen(port);
         listener.on('listening', () => {
             that.port = port;
-            const message = `Static file server running on: ${chalk.green(`http://localhost:${port}`)} (CTRL + C to shut down)`;
+            const message = `Static file server running on: ${styleText('green', `http://localhost:${port}`)} (CTRL + C to shut down)`;
             if (!opts.noServerInfo) {
                 log(message);
             }
