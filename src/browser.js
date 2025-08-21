@@ -19,8 +19,8 @@
 
 /* globals Promise: true */
 
-const child_process = require('child_process');
-const fs = require('fs');
+const child_process = require('node:child_process');
+const fs = require('node:fs');
 const open = require('open');
 const which = require('which');
 const exec = require('./exec');

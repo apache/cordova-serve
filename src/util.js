@@ -17,8 +17,8 @@
     under the License.
 */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 // Some helpful utility stuff copied from cordova-lib. This is a bit nicer than taking a dependency on cordova-lib just
 // to get this minimal stuff. Hopefully we won't need the platform stuff (finding platform www_dir) once it is moved
