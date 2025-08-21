@@ -47,7 +47,7 @@ describe('browser', () => {
     });
 
     it('should call open() when target is `default`', () => {
-        const mockUrl = 'this is the freakin url';
+        const mockUrl = 'https://httpd.apache.org/';
 
         const result = browser({ target: 'default', url: mockUrl });
         expect(result).toBeDefined();
