@@ -25,15 +25,9 @@ const path = require('path');
 // into the actual platform.
 
 const platforms = {
-    amazon_fireos: { www_dir: 'assets/www' },
     android: { www_dir: 'assets/www' },
-    blackberry10: { www_dir: 'www' },
     browser: { www_dir: 'www' },
-    firefoxos: { www_dir: 'www' },
-    ios: { www_dir: 'www' },
-    ubuntu: { www_dir: 'www' },
-    windows: { www_dir: 'www' },
-    wp8: { www_dir: 'www' }
+    ios: { www_dir: 'www' }
 };
 
 /**
