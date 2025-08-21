@@ -15,29 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-github:
-  description: Apache Cordova Serve Library
-  homepage: https://cordova.apache.org/
-
-  labels:
-    - cordova
-    - mobile
-    - javascript
-    - nodejs
-    - hacktoberfest
-
-  features:
-    wiki: false
-    issues: true
-    projects: true
-
-  enabled_merge_buttons:
-    squash: true
-    merge: false
-    rebase: false
-
-notifications:
-  commits:              commits@cordova.apache.org
-  issues:               issues@cordova.apache.org
-  pullrequests_status:  issues@cordova.apache.org
-  pullrequests_comment: issues@cordova.apache.org
+# Empty for the release audit workflow.
+# The `license-config` is required even if there are no custom configs
