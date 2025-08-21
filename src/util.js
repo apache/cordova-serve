@@ -27,6 +27,7 @@ const path = require('node:path');
 const platforms = {
     android: { www_dir: 'app/src/main/assets/www' },
     browser: { www_dir: 'www' },
+    electron: { www_dir: 'www' },
     ios: { www_dir: 'www' }
 };
 
