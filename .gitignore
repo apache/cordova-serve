@@ -18,3 +18,7 @@
 .git/
 coverage/
 node_modules/
+
+# ASF release workspace
+.asf-release/
+!.asf-release/.gitkeep
